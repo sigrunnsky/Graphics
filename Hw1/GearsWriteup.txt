@@ -1,0 +1,24 @@
+
+1) The frame rate reported by the program when the window is different sizes,
+specifically 1x1, 300x300 and full screen. Explain your results.
+
+1x1 
+The frame rate ranged between 2800 FPS and 3050 FPS
+
+300x300
+The frame rate ranged between 2895 FPS and 3000 FPS
+The results for 300x300 were very similiar to 1x1
+
+FullScreen
+The frame rate ranged between 600 FPS and 700 FPS
+Fullscreen has the slowest frame rate by far. I set the screen size to the number of pixels on my laptop so the fact that this is not a square like the other dimensions could have an adverse effect. 
+
+2) On some systems the frame rate is a small round number like 60 or 72 or 85
+frames per second, and sometimes it is a large number, thousands or tens of
+thousands of frames per second. Explain why this occurs.
+
+This happens because the GPU ( Graphics Processing Unit) can be capped at 60 FPS. If it is not capped, then it can run much much faster.
+
+3) Time required to complete the assignment.
+
+3 hours
