@@ -162,6 +162,12 @@ void key(unsigned char ch,int x,int y)
       else
          w -= 0.1;
    }
+   //'q' to increase b variable by .05
+   //'w' to decrease b variable by .05
+   //'e' to increase r variable by .05
+   //'r' to decrease r variable by .05
+   //'t' to increase s variable by .05
+   //'y' to decrease s variable by .05
    else if ( ch == 'q')
      b+=0.05;
    else if (ch == 'w')
