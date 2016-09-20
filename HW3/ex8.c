@@ -1,5 +1,6 @@
 /*  HW3: Sigrunn Sky
-
+ //Used Ex8.c from class as my starting point
+ //Used https://www.ntu.edu.sg/home/ehchua/programming/opengl/CG_Examples.html To help me make the triangles for the christmas tree
  
  *
  *  Key bindings:
@@ -153,23 +154,23 @@ static void TRI(double x, double y, double z, double dx,double dy,double dz,
    glEnd();   // Done drawing the pyramid
       glBegin(GL_TRIANGLES);  //Bottom Triangle
       // Front
-      glColor3f(1, 0, 0);     // Red
+      glColor3f(0, 1, 0);     // Red
       glVertex3f( 0, 0, 0);
-     // glColor3f(0, 1, 0);     // Green
+      glColor3f(0, .9, 0);     // Green
       glVertex3f(-1, -2, 1);
-      //glColor3f(0, 1, 0);  
+      glColor3f(0, 1.1, 0);  
       glVertex3f(1.0f, -2.0f, 1.0f);
  
       // Right
-      glColor3f(1.0f, 0.0f, 0.0f);     // Red
+      glColor3f(0.1, 0.7, 0.0f);     // Red
       glVertex3f(0.0f, 0.0f, 0.0f);
-    //  glColor3f(0.0f, 0.0f, 1.0f);     // Blue
+      glColor3f(0.0f, 0.9f, .1f);     // Blue
       glVertex3f(1.0f, -2.0f, 1.0f);
-     // glColor3f(0.0f, 1.0f, 0.0f);     // Green
+      glColor3f(0.0f, 1.0f, 0.0f);     // Green
       glVertex3f(1.0f, -2.0f, -1.0f);
  
       // Back
-      glColor3f(1.0f, 0.0f, 0.0f);     // Red
+      glColor3f(0.0f, 1.0f, 0.0f);     // Red
       glVertex3f(0.0f, 0.0f, 0.0f);
     //  glColor3f(0.0f, 1.0f, 0.0f);     // Green
       glVertex3f(1.0f, -2.0f, -1.0f);
@@ -177,7 +178,7 @@ static void TRI(double x, double y, double z, double dx,double dy,double dz,
       glVertex3f(-1.0f, -2.0f, -1.0f);
  
       // Left
-      glColor3f(1.0f,0.0f,0.0f);       // Red
+      glColor3f(0.0f,1.0f,0.0f);       // Red
       glVertex3f( 0.0f, 0.0f, 0.0f);
      // glColor3f(0.0f,0.0f,1.0f);       // Blue
       glVertex3f(-1.0f,-2.0f,-1.0f);
