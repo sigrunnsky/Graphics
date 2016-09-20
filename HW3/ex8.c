@@ -68,7 +68,7 @@ static void cube(double x,double y,double z,
    //  Cube
    glBegin(GL_QUADS);
    //  Front
-   glColor3f(.5,.03,0);
+   glColor3f(.5,.3,0);
    glVertex3f(-1,-1, 1);
    glVertex3f(+1,-1, 1);
    glVertex3f(+1,+1, 1);
@@ -92,13 +92,13 @@ static void cube(double x,double y,double z,
    glVertex3f(-1,+1,+1);
    glVertex3f(-1,+1,-1);
    //  Top
-   glColor3f(.5,.2,1);
+   glColor3f(.5,.2,0);
    glVertex3f(-1,+1,+1);
    glVertex3f(+1,+1,+1);
    glVertex3f(+1,+1,-1);
    glVertex3f(-1,+1,-1);
    //  Bottom
-   glColor3f(.5,.2,1);
+   glColor3f(.5,.2,0);
    glVertex3f(-1,-1,-1);
    glVertex3f(+1,-1,-1);
    glVertex3f(+1,-1,+1);
@@ -108,7 +108,83 @@ static void cube(double x,double y,double z,
    //  Undo transformations
    glPopMatrix();
 }
-
+static void TRI(double x, double y, double z, double dx,double dy,double dz,
+                 double th)
+   {  //  Save transformation
+      glPushMatrix();
+      //  Offset
+      glTranslated(x,y,z);
+      glRotated(th,0,1,0);
+      glScaled(dx,dy,dz);
+      
+      //  Cube
+      glBegin(GL_TRIANGLES);           // Begin drawing the pyramid with 4 triangles
+      // Front
+      glColor3f(1, 1, 0);     // Green
+      glVertex3f( 0, 1, 0);
+      glColor3f(0, 1.1, 0);     // Different Green
+      glVertex3f(-1, -1, 1);
+      glColor3f(0.0f, 0.0f, 1.3);     // Blue
+      glVertex3f(1.0f, -1.0f, 1.0f);
+ 
+      // Right
+      glColor3f(1.0f, 0.0f, 0.0f);     // Red
+      glVertex3f(0.0f, 1.0f, 0.0f);
+      //glColor3f(0.0f, 0.0f, 1.0f);     // Blue
+      glVertex3f(1.0f, -1.0f, 1.0f);
+      //glColor3f(0.0f, 1.0f, 0.0f);     // Green
+      glVertex3f(1.0f, -1.0f, -1.0f);
+ 
+      // Back
+      glColor3f(1.0f, 0.0f, 0.0f);     // Red
+      glVertex3f(0.0f, 1.0f, 0.0f);
+      //glColor3f(0.0f, 1.0f, 0.0f);     // Green
+      glVertex3f(1.0f, -1.0f, -1.0f);
+      //glColor3f(0.0f, 0.0f, 1.0f);     // Blue
+      glVertex3f(-1.0f, -1.0f, -1.0f);
+ 
+      // Left
+      glColor3f(1.0f,0.0f,0.0f);       // Red
+      glVertex3f( 0.0f, 1.0f, 0.0f);
+      glColor3f(0.0f,0.0f,1.0f);       // Blue
+      glVertex3f(-1.0f,-1.0f,-1.0f);
+      glColor3f(0.0f,1.0f,0.0f);       // Green
+      glVertex3f(-1.0f,-1.0f, 1.0f);
+   glEnd();   // Done drawing the pyramid
+      glBegin(GL_TRIANGLES);  //Bottom Triangle
+      // Front
+      glColor3f(1, 0, 0);     // Red
+      glVertex3f( 0, 0, 0);
+     // glColor3f(0, 1, 0);     // Green
+      glVertex3f(-1, -2, 1);
+      //glColor3f(0, 1, 0);  
+      glVertex3f(1.0f, -2.0f, 1.0f);
+ 
+      // Right
+      glColor3f(1.0f, 0.0f, 0.0f);     // Red
+      glVertex3f(0.0f, 0.0f, 0.0f);
+    //  glColor3f(0.0f, 0.0f, 1.0f);     // Blue
+      glVertex3f(1.0f, -2.0f, 1.0f);
+     // glColor3f(0.0f, 1.0f, 0.0f);     // Green
+      glVertex3f(1.0f, -2.0f, -1.0f);
+ 
+      // Back
+      glColor3f(1.0f, 0.0f, 0.0f);     // Red
+      glVertex3f(0.0f, 0.0f, 0.0f);
+    //  glColor3f(0.0f, 1.0f, 0.0f);     // Green
+      glVertex3f(1.0f, -2.0f, -1.0f);
+     // glColor3f(0.0f, 0.0f, 1.0f);     // Blue
+      glVertex3f(-1.0f, -2.0f, -1.0f);
+ 
+      // Left
+      glColor3f(1.0f,0.0f,0.0f);       // Red
+      glVertex3f( 0.0f, 0.0f, 0.0f);
+     // glColor3f(0.0f,0.0f,1.0f);       // Blue
+      glVertex3f(-1.0f,-2.0f,-1.0f);
+      //glColor3f(0.0f,1.0f,0.0f);       // Green
+      glVertex3f(-1.0f,-2.0f, 1.0f);
+      glEnd();
+   }
 /*
  *  Draw vertex in polar coordinates
  */
@@ -406,8 +482,8 @@ void display()
    {
       //  Draw cubes
       case 0:
-         cube(1,0,0 , 0.1,0.7,0.1 , 0);
-
+         cube(1,1,1 , 0.05,0.7,0.05 , 0);
+         TRI( 0.0, 0.0, 0.0, 0.3,0.5,0.3 , 0);
          //cube(1,0,0 , 0.2,0.2,0.4 , 45);
          //cube(0,1,0 , 0.4,0.4,0.2 , 90);
          break;
@@ -523,9 +599,6 @@ void key(unsigned char ch,int x,int y)
    //  Toggle axes
    else if (ch == 'a' || ch == 'A')
       axes = 1-axes;
-   //  Switch display mode
-   else if (ch == 'm')
-      mode = (mode+1)%1;
 
    //  Tell GLUT it is necessary to redisplay the scene
    glutPostRedisplay();
