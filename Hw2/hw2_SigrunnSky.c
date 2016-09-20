@@ -1,17 +1,8 @@
 /*
- *  Coordinates
- *
- *  Display 2, 3 and 4 dimensional coordinates in 3D.
- *
- *  Key bindings:
- *  1      2D coordinates
- *  2      2D coordinates with fixed Z value
- *  3      3D coordinates
- *  4      4D coordinates
- *  +/-    Increase/decrease z or w
- *  arrows Change view angle
- *  0      Reset view angle
- *  ESC    Exit
+ *  HW2 - Sigrunn Sky
+	Used Lorenz.C for the Lorenz Attractor equation
+	Used Ex6.c for a template
+ 	
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -93,8 +84,8 @@ void display()
       y += dt*dy;
       z += dt*dz;
 
-
-      glColor3ub((int)i/69%255, (int)i/7%255, (int)i/27%255);
+      //cool way to set rgb. I changed the numbers arounnd until they were pretty enough. Tried to make them random
+  	  glColor3ub(((int)i*70%255), ((int)i%255), ((int)i/27%255));    
         // Multiply by .05 to make attractor fit in default view
       glVertex4f(x*.05, y*.05, z*.05, w); 
    }
@@ -118,7 +109,7 @@ void display()
    Print("Z");
    //  Display parameters
    glWindowPos2i(5,5);
-   Print("View Angle=%d,%d  %s",th,ph,text[mode]);
+   
    if (mode==2)
       Print("  z=%.1f",z);
    else if (mode==4)
@@ -240,7 +231,7 @@ int main(int argc,char* argv[])
    //  Request double buffered, true color window 
    glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE);
    //  Request 500 x 500 pixel window
-   glutInitWindowSize(500,500);
+   glutInitWindowSize(800,500);
    //  Create the window
    glutCreateWindow("SigrunnSky_HW2");
    //  Tell GLUT to call "display" when the scene should be drawn

@@ -3,14 +3,12 @@ Time taken to complete: ~3 hours
 
 Controls:
 
-'+' to zoom in
-'-' to zoom out
 'Esc' to exit screen
 'Arrow Keys' to change perspective
-'0' to reset veiw angle
 'q' to increase b variable by .05
 'w' to decrease b variable by .05
 'e' to increase r variable by .05
 'r' to decrease r variable by .05
 't' to increase s variable by .05
 'y' to decrease s variable by .05
+
