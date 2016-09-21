@@ -1,7 +1,7 @@
 /*  HW3: Sigrunn Sky
  //Used Ex8.c from class as my starting point
  //Used https://www.ntu.edu.sg/home/ehchua/programming/opengl/CG_Examples.html To help me make the triangles for the christmas tree
- 
+ //Used http://prideout.net/archive/colors.php to help me pick colors
  *
  *  Key bindings:
  *  a          Toggle axes
@@ -24,7 +24,7 @@
 int th=0;         //  Azimuth of view angle
 int ph=0;         //  Elevation of view angle
 double zh=0;      //  Rotation of teapot
-int axes=1;       //  Display axes
+int axes=0;       //  Display axes
 int mode=0;       //  What to display
 
 //  Cosine and Sine in degrees
@@ -119,73 +119,110 @@ static void TRI(double x, double y, double z, double dx,double dy,double dz,
       glScaled(dx,dy,dz);
       
       //  Cube
-      glBegin(GL_TRIANGLES);           // Begin drawing the pyramid with 4 triangles
+      glBegin(GL_TRIANGLES);           // 1st pyramid
       // Front
-      glColor3f(0.0, 0.5, 0.0);     // Green
-      glVertex3f( 0, 1, 0);
-      //glColor3f(0.0 0.5 0.0);     // Different Green
-      glVertex3f(-1, -1, 1);
-      //glColor3f(0.0f, 0.0f, 1.3);     // Blue
-      glVertex3f(1.0f, -1.0f, 1.0f);
+      glColor3f(0.196, 0.804, 0.196);     // Green
+      glVertex3f( 0, .8, 0);
+      glColor3f(0.000, 0.392, 0.000);     // Different Green
+      glVertex3f(-1, -.8, 1);
+      glColor3f(0.000, 0.392, 0.000);     // Blue
+      glVertex3f(1.0, -.8, 1.0);
  
       // Right
-      glColor3f(0.0, 0.5, 0.0);     // Red
-      glVertex3f(0.0f, 1.0f, 0.0f);
-      glColor3f(0.0f, 0.4f, 0.1f);     // Blue
-      glVertex3f(1.0f, -1.0f, 1.0f);
-      glColor3f(0.0f, 0.6f, 0.2f);     // Green
-      glVertex3f(1.0f, -1.0f, -1.0f);
+      glColor3f(0.196, 0.804, 0.196);     // Red
+      glVertex3f(0.0, .8, 0.0);
+      glColor3f(0.000, 0.392, 0.000);     // Blue
+      glVertex3f(1.0, -.8, 1.0);
+      glColor3f(0.000, 0.392, 0.000);    // Green
+      glVertex3f(1.0, -.8, -1.0);
  
       // Back
-      glColor3f(0.0, 0.5, 0.0);     // Red
-      glVertex3f(0.0f, 1.0f, 0.0f);
-      //glColor3f(0.0f, 1.0f, 0.0f);     // Green
-      glVertex3f(1.0f, -1.0f, -1.0f);
-      //glColor3f(0.0f, 0.0f, 1.0f);     // Blue
-      glVertex3f(-1.0f, -1.0f, -1.0f);
+      glColor3f(0.196, 0.804, 0.196);     // Red
+      glVertex3f(0.0, .8, 0.0);
+      glColor3f(0.000, 0.392, 0.000);   // Green
+      glVertex3f(1.0, -.8, -1.0);
+      glColor3f(0.000, 0.392, 0.000);     // Blue
+      glVertex3f(-1.0, -.8, -1.0);
  
       // Left
-      glColor3f(0.0, 0.5, 0.0);       // Red
-      glVertex3f( 0.0, 1.0, 0.0);
-      glColor3f(0.1,0.5,0.0);       // Blue
-      glVertex3f(-1.0,-1.0,-1.0);
-      glColor3f(0.0, 0.4,0.0);       // Green
-      glVertex3f(-1.0,-1.0, 1.0);
+      glColor3f(0.196, 0.804, 0.196);       // Red
+      glVertex3f( 0.0, .8, 0.0);
+      glColor3f(0.000, 0.392, 0.000);   // Blue
+      glVertex3f(-1.0,-.8,-1.0);
+      glColor3f(0.000, 0.392, 0.000);       // Green
+      glVertex3f(-1.0,-.8, 1.0);
    glEnd();   // Done drawing the pyramid
       
       glRotated(45,0,1,0);
-      glBegin(GL_TRIANGLES);  //Bottom Triangle
+      glBegin(GL_TRIANGLES);  //2nd pyramid
       // Front
-      glColor3f(0, 0.2, 0);     // Red
+      glColor3f(0.196, 0.804, 0.196);     // Red
       glVertex3f( 0, 0, 0);
-      glColor3f(0, .4, 0);     // Green
-      glVertex3f(-1, -2, 1);
-      glColor3f(0, 0.5, 0);  
-      glVertex3f(1.0f, -2.0f, 1.0f);
+      glColor3f(0.000, 0.392, 0.000);
+      glVertex3f(-1.3, -2, 1.3);
+      glColor3f(0.000, 0.392, 0.000);
+      glVertex3f(1.3, -2.0, 1.3);
  
       // Right
-      glColor3f(0.1, 0.5, 0.);     // Red
+      glColor3f(0.196, 0.804, 0.196);     // Red
       glVertex3f(0, 0, 0);
-      glColor3f(0.0, 0.5, .1);     // Blue
-      glVertex3f(1.0, -2.0, 1.0);
-      glColor3f(0.0, .50, 0.0);     // Green
-      glVertex3f(1.0, -2.0, -1.0);
+      glColor3f(0.000, 0.392, 0.000);   
+      glVertex3f(1.3, -2.0, 1.3);
+      glColor3f(0.000, 0.392, 0.000);
+      glVertex3f(1.3, -2.0, -1.3);
  
       // Back
-      glColor3f(0.0, .5, 0.0);     // Red
+      glColor3f(0.196, 0.804, 0.196);     // Red
       glVertex3f(0.0, 0.0, 0.0);
-    //  glColor3f(0.0, 1.0, 0.0);     // Green
-      glVertex3f(1.0, -2.0, -1.0);
-     // glColor3f(0.0, 0.0, 1.0);     // Blue
-      glVertex3f(-1.0, -2.0, -1.0);
+      glColor3f(0.000, 0.392, 0.000);   
+      glVertex3f(1.3, -2.0, -1.3);
+      glColor3f(0.000, 0.392, 0.000);
+      glVertex3f(-1.3, -2.0, -1.3);
  
       // Left
-      glColor3f(0.0,.5,0.0);       // Red
+      glColor3f(0.196, 0.804, 0.196);       
       glVertex3f( 0.0, 0.0, 0.0);
-     // glColor3f(0.0,0.0,1.0);       // Blue
-      glVertex3f(-1.0,-2.0,-1.0);
-      //glColor3f(0.0,1.0,0.0);       // Green
-      glVertex3f(-1.0,-2.0, 1.0);
+      glColor3f(0.000, 0.392, 0.000); 
+      glVertex3f(-1.3,-2.0,-1.3);
+      glColor3f(0.000, 0.392, 0.000);       
+      glVertex3f(-1.3,-2.0, 1.3);
+      glEnd();
+
+
+      glRotated(25,0,1,0);
+      glBegin(GL_TRIANGLES);  //3rd pyramid
+      // Front
+      
+      glColor3f(0.196, 0.804, 0.196); // dark green
+      glVertex3f( 0, -.8, 0);
+      glColor3f(0.000, 0.392, 0.000);
+      glVertex3f(-1.5, -3.3, 1.5);
+      glColor3f(0.000, 0.392, 0.000);
+      glVertex3f(1.5, -3.3, 1.5);
+ 
+      // Right
+      glColor3f(0.196, 0.804, 0.196);
+      glVertex3f(0, -.8, 0);
+      glColor3f(0.000, 0.392, 0.000);
+      glVertex3f(1.5, -3.3, 1.5);
+      glColor3f(0.000, 0.392, 0.000);
+      glVertex3f(1.5, -3.3, -1.5);
+ 
+      // Back
+      glColor3f(0.196, 0.804, 0.196);     
+      glVertex3f(0.0, -.8, 0.0);
+      glColor3f(0.000, 0.392, 0.000);
+      glVertex3f(1.5, -3.3, -1.5);
+      glColor3f(0.000, 0.392, 0.000);
+      glVertex3f(-1.5, -3.3, -1.5);
+ 
+      // Left
+      glColor3f(0.196, 0.804, 0.196);   
+      glVertex3f( 0.0, -.8, 0.0);
+      glColor3f(0.000, 0.392, 0.000);
+      glVertex3f(-1.5,-3.3,-1.5);
+      glColor3f(0.000, 0.392, 0.000);
+      glVertex3f(-1.5,-3.3, 1.5);
       glEnd();
    }
 /*
@@ -485,8 +522,8 @@ void display()
    {
       //  Draw cubes
       case 0:
-         cube(1,1,1 , 0.05,0.7,0.05 , 0);
-         TRI( 0.0, 0.0, 0.0, 0.3,0.5,0.3 , 0);
+         cube(0,0,0 , 0.05,0.7,0.05 , 0);
+         TRI(0,2,0, 0.3,0.5,0.3 , 0);
          //cube(1,0,0 , 0.2,0.2,0.4 , 45);
          //cube(0,1,0 , 0.4,0.4,0.2 , 90);
          break;
@@ -612,7 +649,7 @@ void key(unsigned char ch,int x,int y)
  */
 void reshape(int width,int height)
 {
-   const double dim=2.5;
+   const double dim=5; //change zoom sig
    //  Ratio of the width to the height of the window
    double w2h = (height>0) ? (double)width/height : 1;
    //  Set the viewport to the entire window
