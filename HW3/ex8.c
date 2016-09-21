@@ -121,23 +121,23 @@ static void TRI(double x, double y, double z, double dx,double dy,double dz,
       //  Cube
       glBegin(GL_TRIANGLES);           // Begin drawing the pyramid with 4 triangles
       // Front
-      glColor3f(1, 1, 0);     // Green
+      glColor3f(0.0, 0.5, 0.0);     // Green
       glVertex3f( 0, 1, 0);
-      glColor3f(0, 1.1, 0);     // Different Green
+      //glColor3f(0.0 0.5 0.0);     // Different Green
       glVertex3f(-1, -1, 1);
-      glColor3f(0.0f, 0.0f, 1.3);     // Blue
+      //glColor3f(0.0f, 0.0f, 1.3);     // Blue
       glVertex3f(1.0f, -1.0f, 1.0f);
  
       // Right
-      glColor3f(1.0f, 0.0f, 0.0f);     // Red
+      glColor3f(0.0, 0.5, 0.0);     // Red
       glVertex3f(0.0f, 1.0f, 0.0f);
-      //glColor3f(0.0f, 0.0f, 1.0f);     // Blue
+      glColor3f(0.0f, 0.4f, 0.1f);     // Blue
       glVertex3f(1.0f, -1.0f, 1.0f);
-      //glColor3f(0.0f, 1.0f, 0.0f);     // Green
+      glColor3f(0.0f, 0.6f, 0.2f);     // Green
       glVertex3f(1.0f, -1.0f, -1.0f);
  
       // Back
-      glColor3f(1.0f, 0.0f, 0.0f);     // Red
+      glColor3f(0.0, 0.5, 0.0);     // Red
       glVertex3f(0.0f, 1.0f, 0.0f);
       //glColor3f(0.0f, 1.0f, 0.0f);     // Green
       glVertex3f(1.0f, -1.0f, -1.0f);
@@ -145,45 +145,47 @@ static void TRI(double x, double y, double z, double dx,double dy,double dz,
       glVertex3f(-1.0f, -1.0f, -1.0f);
  
       // Left
-      glColor3f(1.0f,0.0f,0.0f);       // Red
-      glVertex3f( 0.0f, 1.0f, 0.0f);
-      glColor3f(0.0f,0.0f,1.0f);       // Blue
-      glVertex3f(-1.0f,-1.0f,-1.0f);
-      glColor3f(0.0f,1.0f,0.0f);       // Green
-      glVertex3f(-1.0f,-1.0f, 1.0f);
+      glColor3f(0.0, 0.5, 0.0);       // Red
+      glVertex3f( 0.0, 1.0, 0.0);
+      glColor3f(0.1,0.5,0.0);       // Blue
+      glVertex3f(-1.0,-1.0,-1.0);
+      glColor3f(0.0, 0.4,0.0);       // Green
+      glVertex3f(-1.0,-1.0, 1.0);
    glEnd();   // Done drawing the pyramid
+      
+      glRotated(45,0,1,0);
       glBegin(GL_TRIANGLES);  //Bottom Triangle
       // Front
-      glColor3f(0, 1, 0);     // Red
+      glColor3f(0, 0.2, 0);     // Red
       glVertex3f( 0, 0, 0);
-      glColor3f(0, .9, 0);     // Green
+      glColor3f(0, .4, 0);     // Green
       glVertex3f(-1, -2, 1);
-      glColor3f(0, 1.1, 0);  
+      glColor3f(0, 0.5, 0);  
       glVertex3f(1.0f, -2.0f, 1.0f);
  
       // Right
-      glColor3f(0.1, 0.7, 0.0f);     // Red
-      glVertex3f(0.0f, 0.0f, 0.0f);
-      glColor3f(0.0f, 0.9f, .1f);     // Blue
-      glVertex3f(1.0f, -2.0f, 1.0f);
-      glColor3f(0.0f, 1.0f, 0.0f);     // Green
-      glVertex3f(1.0f, -2.0f, -1.0f);
+      glColor3f(0.1, 0.5, 0.);     // Red
+      glVertex3f(0, 0, 0);
+      glColor3f(0.0, 0.5, .1);     // Blue
+      glVertex3f(1.0, -2.0, 1.0);
+      glColor3f(0.0, .50, 0.0);     // Green
+      glVertex3f(1.0, -2.0, -1.0);
  
       // Back
-      glColor3f(0.0f, 1.0f, 0.0f);     // Red
-      glVertex3f(0.0f, 0.0f, 0.0f);
-    //  glColor3f(0.0f, 1.0f, 0.0f);     // Green
-      glVertex3f(1.0f, -2.0f, -1.0f);
-     // glColor3f(0.0f, 0.0f, 1.0f);     // Blue
-      glVertex3f(-1.0f, -2.0f, -1.0f);
+      glColor3f(0.0, .5, 0.0);     // Red
+      glVertex3f(0.0, 0.0, 0.0);
+    //  glColor3f(0.0, 1.0, 0.0);     // Green
+      glVertex3f(1.0, -2.0, -1.0);
+     // glColor3f(0.0, 0.0, 1.0);     // Blue
+      glVertex3f(-1.0, -2.0, -1.0);
  
       // Left
-      glColor3f(0.0f,1.0f,0.0f);       // Red
-      glVertex3f( 0.0f, 0.0f, 0.0f);
-     // glColor3f(0.0f,0.0f,1.0f);       // Blue
-      glVertex3f(-1.0f,-2.0f,-1.0f);
-      //glColor3f(0.0f,1.0f,0.0f);       // Green
-      glVertex3f(-1.0f,-2.0f, 1.0f);
+      glColor3f(0.0,.5,0.0);       // Red
+      glVertex3f( 0.0, 0.0, 0.0);
+     // glColor3f(0.0,0.0,1.0);       // Blue
+      glVertex3f(-1.0,-2.0,-1.0);
+      //glColor3f(0.0,1.0,0.0);       // Green
+      glVertex3f(-1.0,-2.0, 1.0);
       glEnd();
    }
 /*
