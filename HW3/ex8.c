@@ -159,33 +159,33 @@ static void TRI(double x, double y, double z, double dx,double dy,double dz,
       glColor3f(0.196, 0.804, 0.196);     // Red
       glVertex3f( 0, 0, 0);
       glColor3f(0.000, 0.392, 0.000);
-      glVertex3f(-1.3, -2, 1.3);
+      glVertex3f(-1.4, -2, 1.4);
       glColor3f(0.000, 0.392, 0.000);
-      glVertex3f(1.3, -2.0, 1.3);
+      glVertex3f(1.4, -2.0, 1.4);
  
       // Right
       glColor3f(0.196, 0.804, 0.196);     // Red
       glVertex3f(0, 0, 0);
       glColor3f(0.000, 0.392, 0.000);   
-      glVertex3f(1.3, -2.0, 1.3);
+      glVertex3f(1.4, -2.0, 1.4);
       glColor3f(0.000, 0.392, 0.000);
-      glVertex3f(1.3, -2.0, -1.3);
+      glVertex3f(1.4, -2.0, -1.4);
  
       // Back
       glColor3f(0.196, 0.804, 0.196);     // Red
       glVertex3f(0.0, 0.0, 0.0);
       glColor3f(0.000, 0.392, 0.000);   
-      glVertex3f(1.3, -2.0, -1.3);
+      glVertex3f(1.4, -2.0, -1.4);
       glColor3f(0.000, 0.392, 0.000);
-      glVertex3f(-1.3, -2.0, -1.3);
+      glVertex3f(-1.4, -2.0, -1.4);
  
       // Left
       glColor3f(0.196, 0.804, 0.196);       
       glVertex3f( 0.0, 0.0, 0.0);
       glColor3f(0.000, 0.392, 0.000); 
-      glVertex3f(-1.3,-2.0,-1.3);
+      glVertex3f(-1.4,-2.0,-1.4);
       glColor3f(0.000, 0.392, 0.000);       
-      glVertex3f(-1.3,-2.0, 1.3);
+      glVertex3f(-1.4,-2.0, 1.4);
       glEnd();
 
 
