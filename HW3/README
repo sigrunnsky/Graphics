@@ -1,13 +1,14 @@
-ex8: 3D Objects
+HW3: 3D Objects - Sigrunn Sky
 
 Willem A. (Vlakkies) Schreuder
 CSCI4229/5229 Fall 2016
 
-Demonstrates how to draw objects in 3D.
 
 Key bindings
-  m/M        Cycle through different sets of objects
   a          Toggle axes
   arrows     Change view angle
   0          Reset view angle
   ESC        Exit
+
+
+You should see two presents and two christmas trees. :)

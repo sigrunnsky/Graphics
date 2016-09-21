@@ -50,6 +50,7 @@ void Print(const char* format , ...)
       glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18,*ch++);
 }
 
+
 /*
  *  Draw a cube
  *     at (x,y,z)
@@ -59,6 +60,7 @@ void Print(const char* format , ...)
 static void cube(double x,double y,double z,
                  double dx,double dy,double dz,
                  double th)
+
 {
    //  Save transformation
    glPushMatrix();
@@ -228,7 +230,7 @@ static void Tree(double x, double y, double z, double dx,double dy,double dz,
    }
 
    static void Star(double x, double y, double z, double dx,double dy,double dz,
-                 double th)
+                 double th, double r, double g, double b)
    {
       //  Save transformation
       glPushMatrix();
@@ -239,7 +241,7 @@ static void Tree(double x, double y, double z, double dx,double dy,double dz,
 
       //loop lines
       glBegin(GL_LINE_LOOP);
-      glColor3f(1, 1 ,0);
+      glColor3f(r, g ,b);
       glVertex3f(0.0,2.0,0.0);
       glVertex3f(0.7,0.7,0.0);
       glVertex3f(1.7,0.7,0.0);
@@ -253,19 +255,20 @@ static void Tree(double x, double y, double z, double dx,double dy,double dz,
 
 
       glEnd();
+     // glPopMatrix(); (When I uncomment this my presents disapear...)
    }
 
   static void Gift(double x,double y,double z,
                  double dx,double dy,double dz,
                  double th)
-{
+   {
    //  Save transformation
    glPushMatrix();
    //  Offset
    glTranslated(x,y,z);
    glRotated(th,0,1,0);
    glScaled(dx,dy,dz);
-   //  Cube
+   //  Cube for the gift itself
    glBegin(GL_QUADS);
    //  Front
    glColor3f(1,0,0);
@@ -305,296 +308,237 @@ static void Tree(double x, double y, double z, double dx,double dy,double dz,
    glVertex3f(-1,-1,+1);
    //  End
    glEnd();
-   glBegin(GL_LINE_LOOP);
-   glColor3f(1,2,0);
-   glVertex3f(-.1 , +2,-.1);
-   glVertex3f(+.1 , +1,-.1);
-   //TODO: Create variotions: AKA party string
-   
-   glEnd();
-   //  Undo transformations
-   glPopMatrix();
-}
-/*
- *  Draw vertex in polar coordinates
- */
-static void Vertex(double th,double ph)
-{
-   glColor3f(Sin(th)*Cos(ph),0,0);
-   glVertex3d(Sin(th)*Cos(ph) , Sin(ph) , Cos(th)*Cos(ph));
-}
-
-/*
- *  Draw a sphere (version 1)
- *     at (x,y,z)
- *     radius (r)
- */
-static void sphere1(double x,double y,double z,double r)
-{
-	//This changes how detailed it is... might change the polygon count
-   const int d=5;
-   int th,ph;
-
-   //  Save transformation
-   glPushMatrix();
-   //  Offset and scale
-   glTranslated(x,y,z);
-   glScaled(r,r,r);
-
-   //  South pole cap
-   glBegin(GL_TRIANGLE_FAN);
-   Vertex(0,-90);
-   for (th=0;th<=360;th+=d)
-   {
-      Vertex(th,d-90);
-   }
-   glEnd();
-
-   //  Latitude bands
-   for (ph=d-90;ph<=90-2*d;ph+=d)
-   {
-      glBegin(GL_QUAD_STRIP);
-      for (th=0;th<=360;th+=d)
-      {
-         Vertex(th,ph);
-         Vertex(th,ph+d);
-      }
-      glEnd();
-   }
-
-   //  North pole cap
-   glBegin(GL_TRIANGLE_FAN);
-   Vertex(0,90);
-   for (th=0;th<=360;th+=d)
-   {
-      Vertex(th,90-d);
-   }
-   glEnd();
-
-   //  Undo transformations
-   glPopMatrix();
-}
-
-/*
- *  Draw a sphere (version 2)
- *     at (x,y,z)
- *     radius (r)
- */
-static void sphere2(double x,double y,double z,double r)
-{
-   const int d=5;
-   int th,ph;
-
-   //  Save transformation
-   glPushMatrix();
-   //  Offset and scale
-   glTranslated(x,y,z);
-   glScaled(r,r,r);
-
-   //  Latitude bands
-   for (ph=-90;ph<90;ph+=d)
-   {
-      glBegin(GL_QUAD_STRIP);
-      for (th=0;th<=360;th+=d)
-      {
-         Vertex(th,ph);
-         Vertex(th,ph+d);
-      }
-      glEnd();
-   }
-
-   //  Undo transformations
-   glPopMatrix();
-}
-
-/*
- *  Draw a airplane shaped polygon at (x,y,z)
- */
-static void PolyPlane(int type,double x,double y,double z)
-{
-   //  Save transformation
-   glPushMatrix();
-   //  Offset
-   glTranslated(x,y,z);
-   //  Fuselage and wings
-   glColor3f(1,1,0); 
-   glBegin(type);
-   glVertex2f( 1.0, 0.0);
-   glVertex2f( 0.8, 0.1);
-   glVertex2f( 0.0, 0.1);
-   glVertex2f(-1.0, 0.5);
-   glVertex2f(-1.0,-0.5);
-   glVertex2f( 0.0,-0.1);
-   glVertex2f( 0.8,-0.1);
-   glEnd();
-   //  Vertical tail
-   glColor3f(1,0,0);
-   glBegin(type);
-   glVertex3f(-1.0, 0.0,0.0);
-   glVertex3f(-1.0, 0.0,0.5);
-   glVertex3f(-0.5, 0.0,0.0);
-   glEnd();
-   //  Undo transformations
-   glPopMatrix();
-}
-
-/*
- *  Draw a flat airplane at (x,y,z)
- */
-static void FlatPlane(double x,double y,double z)
-{
-   //  Save transformation
-   glPushMatrix();
-   //  Offset
-   glRotated(-90,1,0,0);
-   glTranslated(x,y,z);
-   //  Fuselage
-   glColor3f(0,0,1);
-   glBegin(GL_POLYGON);
-   glVertex2f( 1.0, 0.0);
-   glVertex2f( 0.8, 0.1);
-   glVertex2f(-1.0, 0.1);
-   glVertex2f(-1.0,-0.1);
-   glVertex2f( 0.8,-0.1);
-   glEnd();
-   //  Wings
-   glColor3f(1,1,0);
-   glBegin(GL_TRIANGLES);
-   //  Starboard
-   glVertex2f( 0.0, 0.1);
-   glVertex2f(-1.0, 0.1);
-   glVertex2f(-1.0, 0.5);
-   //  Port
-   glVertex2f( 0.0,-0.1);
-   glVertex2f(-1.0,-0.1);
-   glVertex2f(-1.0,-0.5);
-   glEnd();
-   //  Vertical tail
-   glColor3f(1,0,0);
-   glBegin(GL_TRIANGLES);
-   glVertex3f(-1.0, 0.0,0.0);
-   glVertex3f(-1.0, 0.0,0.5);
-   glVertex3f(-0.5, 0.0,0.0);
-   glEnd();
-   //  Undo transformations
-   glPopMatrix();
-}
-
-/*
- *  Draw solid airplane
- *    at (x,y,z)
- *    nose towards (dx,dy,dz)
- *    up towards (ux,uy,uz)
- */
-static void SolidPlane(double x,double y,double z,
-                       double dx,double dy,double dz,
-                       double ux,double uy, double uz)
-{
-   // Dimensions used to size airplane
-   const double wid=0.05;
-   const double nose=+0.50;
-   const double cone= 0.20;
-   const double wing= 0.00;
-   const double strk=-0.20;
-   const double tail=-0.50;
-   //  Unit vector in direction of flght
-   double D0 = sqrt(dx*dx+dy*dy+dz*dz);
-   double X0 = dx/D0;
-   double Y0 = dy/D0;
-   double Z0 = dz/D0;
-   //  Unit vector in "up" direction
-   double D1 = sqrt(ux*ux+uy*uy+uz*uz);
-   double X1 = ux/D1;
-   double Y1 = uy/D1;
-   double Z1 = uz/D1;
-   //  Cross product gives the third vector
-   double X2 = Y0*Z1-Y1*Z0;
-   double Y2 = Z0*X1-Z1*X0;
-   double Z2 = X0*Y1-X1*Y0;
-   //  Rotation matrix
-   double mat[16];
-   mat[0] = X0;   mat[4] = X1;   mat[ 8] = X2;   mat[12] = 0;
-   mat[1] = Y0;   mat[5] = Y1;   mat[ 9] = Y2;   mat[13] = 0;
-   mat[2] = Z0;   mat[6] = Z1;   mat[10] = Z2;   mat[14] = 0;
-   mat[3] =  0;   mat[7] =  0;   mat[11] =  0;   mat[15] = 1;
-
-   //  Save current transforms
-   glPushMatrix();
-   //  Offset, scale and rotate
-   glTranslated(x,y,z);
-   glMultMatrixd(mat);
-   //  Nose (4 sided)
-   glColor3f(0,0,1);
-   glBegin(GL_TRIANGLES);
-   glVertex3d(nose, 0.0, 0.0);
-   glVertex3d(cone, wid, wid);
-   glVertex3d(cone,-wid, wid);
-
-   glVertex3d(nose, 0.0, 0.0);
-   glVertex3d(cone, wid,-wid);
-   glVertex3d(cone,-wid,-wid);
-
-   glVertex3d(nose, 0.0, 0.0);
-   glVertex3d(cone, wid, wid);
-   glVertex3d(cone, wid,-wid);
-
-   glVertex3d(nose, 0.0, 0.0);
-   glVertex3d(cone,-wid, wid);
-   glVertex3d(cone,-wid,-wid);
-   glEnd();
-   //  Fuselage (square tube)
    glBegin(GL_QUADS);
-   glVertex3d(cone, wid, wid);
-   glVertex3d(cone,-wid, wid);
-   glVertex3d(tail,-wid, wid);
-   glVertex3d(tail, wid, wid);
 
-   glVertex3d(cone, wid,-wid);
-   glVertex3d(cone,-wid,-wid);
-   glVertex3d(tail,-wid,-wid);
-   glVertex3d(tail, wid,-wid);
+   //Now create the Lid of the Gift
+   //  Front
+   glColor3f(1,.1,.6);
+   glVertex3f(-1.1,.5, 1.1);
+   glVertex3f(+1.1,.5, 1.1);
+   glVertex3f(+1.1,+1.1, 1.1);
+   glVertex3f(-1.1,+1.1, 1.1);
+   //  Back
+   glColor3f(1.0,.1,.6);
+   glVertex3f(+1.1,.5,-1.1);
+   glVertex3f(-1.1,.5,-1.1);
+   glVertex3f(-1.1,+1.1,-1.1);
+   glVertex3f(+1.1,+1.1,-1.1);
+   //  Right
+   glColor3f(1,.10,.6);
+   glVertex3f(+1.1,.5,+1.1);
+   glVertex3f(+1.1,.5,-1.1);
+   glVertex3f(+1.1,+1.1,-1.1);
+   glVertex3f(+1.1,+1.1,+1.1);
+   //  Left
+   glColor3f(1,.10,.6);
+   glVertex3f(-1.1,.5,-1.1);
+   glVertex3f(-1.1,.5,+1.1);
+   glVertex3f(-1.1,+1.1,+1.1);
+   glVertex3f(-1.1,+1.1,-1.1);
+   //  Top
+   glColor3f(1,.10,.6);
+   glVertex3f(-1.1,+1.1,+1.1);
+   glVertex3f(+1.1,+1.1,+1.1);
+   glVertex3f(+1.1,+1.1,-1.1);
+   glVertex3f(-1.1,+1.1,-1.1);
+   //  Bottom
+   glColor3f(1,.10,.6);
+   glVertex3f(-1.1,.5,-1.1);
+   glVertex3f(+1.1,.5,-1.1);
+   glVertex3f(+1.1,.5,+1.1);
+   glVertex3f(-1.1,.5,+1.1);
+   //  End
+   glEnd();
 
-   glVertex3d(cone, wid, wid);
-   glVertex3d(cone, wid,-wid);
-   glVertex3d(tail, wid,-wid);
-   glVertex3d(tail, wid, wid);
 
-   glVertex3d(cone,-wid, wid);
-   glVertex3d(cone,-wid,-wid);
-   glVertex3d(tail,-wid,-wid);
-   glVertex3d(tail,-wid, wid);
+   glColor3f(1,2,0);
+   glBegin(GL_LINE_LOOP);
+   glVertex3f(-.1 , +2,-.1); //create loopies up top
+   glVertex3f(+.1 , +1,-.1);
+   glVertex3f(-.2 , +2,-.2);
+   glVertex3f(+.1 , +1,-.1);
+   glVertex3f(-.3 , +2,-.3);
+   glVertex3f(+.1 , +1,-.1);
+   glVertex3f(-.4 , +2,-.4);
+   glVertex3f(+.1 , +1,-.1);
+   glVertex3f(-.5 , +2,-.5);
+   glVertex3f(+.1 , +1,-.1);
+   glVertex3f(+.1 , +2,+.1);
+   glVertex3f(+.1 , +1,-.1);
+   glVertex3f(+.2 , +2,-.2);
+   glVertex3f(+.1 , +1,-.1);
+   glVertex3f(+.3 , +2,-.3);
+   glVertex3f(+.1 , +1,-.1);
+   glVertex3f(+.4 , +2,-.4);
+   glVertex3f(+.1 , +1,-.1);
+   glVertex3f(+.5 , +2,-.5);
+   glVertex3f(+.1 , +1,-.1);
+   glVertex3f(-.1 , +2,+.1);
+   glVertex3f(+.1 , +1,-.1);
+   glVertex3f(-.2 , +2,+.2);
+   glVertex3f(+.1 , +1,-.1);
+   glVertex3f(-.3 , +2,+.3);
+   glVertex3f(+.1 , +1,-.1);
+   glVertex3f(-.4 , +2,+.4);
+   glVertex3f(+.1 , +1,-.1);
+   glVertex3f(-.5 , +2,+.5);
+   glVertex3f(+.1 , +1,-.1);
+   glVertex3f(+.1 , +2,+.1);
+   glVertex3f(+.1 , +1,-.1);
+   glVertex3f(+.2 , +2,+.2);
+   glVertex3f(+.1 , +1,-.1);
+   glVertex3f(+.3 , +2,+.3);
+   glVertex3f(+.1 , +1,-.1);
+   glVertex3f(+.4 , +2,+.4);
+   glVertex3f(+.1 , +1,-.1);
+   glVertex3f(+.5 , +2,+.5);
    
-   //plugs the butt of the plane
-   glVertex3d(tail,-wid, wid);
-   glVertex3d(tail, wid, wid);
-   glVertex3d(tail, wid,-wid);
-   glVertex3d(tail,-wid,-wid);
    glEnd();
-   //  Wings (plane triangles)
-   glColor3f(1,1,0);
-   glBegin(GL_TRIANGLES);
-   glVertex3d(wing, 0.0, wid);
-   glVertex3d(tail, 0.0, wid);
-   glVertex3d(tail, 0.0, 0.5);
+   
+   //  Undo transformations
+   glPopMatrix();
+}
 
-   glVertex3d(wing, 0.0,-wid);
-   glVertex3d(tail, 0.0,-wid);
-   glVertex3d(tail, 0.0,-0.5);
+//experimenting with making all colors into parameters
+static void SuperGift(double x,double y,double z,
+                 double dx,double dy,double dz,
+                 double th, double mr, double mg, double mb, double tr, double tg, double tb, double lr, double lg, double lb )
+{
+   //  Save transformation
+   glPushMatrix();
+   //  Offset
+   glTranslated(x,y,z);
+   glRotated(th,0,1,0);
+   glScaled(dx,dy,dz);
+   //  Cube for the gift itself
+   glBegin(GL_QUADS);
+   //  Front
+   glColor3f(mr,mg,mb);
+   glVertex3f(-1,-1, 1);
+   glVertex3f(+1,-1, 1);
+   glVertex3f(+1,+1, 1);
+   glVertex3f(-1,+1, 1);
+   //  Back
+    glColor3f(mr,mg,mb);
+   glVertex3f(+1,-1,-1);
+   glVertex3f(-1,-1,-1);
+   glVertex3f(-1,+1,-1);
+   glVertex3f(+1,+1,-1);
+   //  Right
+    glColor3f(mr,mg,mb);
+   glVertex3f(+1,-1,+1);
+   glVertex3f(+1,-1,-1);
+   glVertex3f(+1,+1,-1);
+   glVertex3f(+1,+1,+1);
+   //  Left
+   glColor3f(mr,mg,mb);
+   glVertex3f(-1,-1,-1);
+   glVertex3f(-1,-1,+1);
+   glVertex3f(-1,+1,+1);
+   glVertex3f(-1,+1,-1);
+   //  Top
+    glColor3f(mr,mg,mb);
+   glVertex3f(-1,+1,+1);
+   glVertex3f(+1,+1,+1);
+   glVertex3f(+1,+1,-1);
+   glVertex3f(-1,+1,-1);
+   //  Bottom
+    glColor3f(mr,mg,mb);
+   glVertex3f(-1,-1,-1);
+   glVertex3f(+1,-1,-1);
+   glVertex3f(+1,-1,+1);
+   glVertex3f(-1,-1,+1);
+   //  End
    glEnd();
-   //  Vertical tail (plane triangle)
-   glColor3f(1,0,0);
-   glBegin(GL_POLYGON);
-   glVertex3d(strk, 0.0, 0.0);
-   glVertex3d(tail, 0.3, 0.0);
-   glVertex3d(tail, 0.0, 0.0);
+   glBegin(GL_QUADS);
+
+   //Now create the Lid of the Gift
+   //  Front
+   glColor3f(tr,tg,tb);
+   glVertex3f(-1.1,.5, 1.1);
+   glVertex3f(+1.1,.5, 1.1);
+   glVertex3f(+1.1,+1.1, 1.1);
+   glVertex3f(-1.1,+1.1, 1.1);
+   //  Back
+   glColor3f(tr,tg,tb);
+   glVertex3f(+1.1,.5,-1.1);
+   glVertex3f(-1.1,.5,-1.1);
+   glVertex3f(-1.1,+1.1,-1.1);
+   glVertex3f(+1.1,+1.1,-1.1);
+   //  Right
+   glColor3f(tr,tg,tb);
+   glVertex3f(+1.1,.5,+1.1);
+   glVertex3f(+1.1,.5,-1.1);
+   glVertex3f(+1.1,+1.1,-1.1);
+   glVertex3f(+1.1,+1.1,+1.1);
+   //  Left
+   glColor3f(tr,tg,tb);
+   glVertex3f(-1.1,.5,-1.1);
+   glVertex3f(-1.1,.5,+1.1);
+   glVertex3f(-1.1,+1.1,+1.1);
+   glVertex3f(-1.1,+1.1,-1.1);
+   //  Top
+   glColor3f(tr,tg,tb);
+   glVertex3f(-1.1,+1.1,+1.1);
+   glVertex3f(+1.1,+1.1,+1.1);
+   glVertex3f(+1.1,+1.1,-1.1);
+   glVertex3f(-1.1,+1.1,-1.1);
+   //  Bottom
+   glColor3f(tr,tg,tb);
+   glVertex3f(-1.1,.5,-1.1);
+   glVertex3f(+1.1,.5,-1.1);
+   glVertex3f(+1.1,.5,+1.1);
+   glVertex3f(-1.1,.5,+1.1);
+   //  End
+   glEnd();
+   glBegin(GL_LINE_LOOP);
+   
+   glColor3f(lr,lg,lb);
+   glVertex3f(-.1 , +2,-.1); //create Decorations up top of gift
+   glVertex3f(+.1 , +1,-.1);
+   glVertex3f(-.2 , +2,-.2);
+   glVertex3f(+.1 , +1,-.1);
+   glVertex3f(-.3 , +2,-.3);
+   glVertex3f(+.1 , +1,-.1);
+   glVertex3f(-.4 , +2,-.4);
+   glVertex3f(+.1 , +1,-.1);
+   glVertex3f(-.5 , +2,-.5);
+   glVertex3f(+.1 , +1,-.1);
+   glVertex3f(+.1 , +2,+.1);
+   glVertex3f(+.1 , +1,-.1);
+   glVertex3f(+.2 , +2,-.2);
+   glVertex3f(+.1 , +1,-.1);
+   glVertex3f(+.3 , +2,-.3);
+   glVertex3f(+.1 , +1,-.1);
+   glVertex3f(+.4 , +2,-.4);
+   glVertex3f(+.1 , +1,-.1);
+   glVertex3f(+.5 , +2,-.5);
+   glVertex3f(+.1 , +1,-.1);
+   glVertex3f(-.1 , +2,+.1);
+   glVertex3f(+.1 , +1,-.1);
+   glVertex3f(-.2 , +2,+.2);
+   glVertex3f(+.1 , +1,-.1);
+   glVertex3f(-.3 , +2,+.3);
+   glVertex3f(+.1 , +1,-.1);
+   glVertex3f(-.4 , +2,+.4);
+   glVertex3f(+.1 , +1,-.1);
+   glVertex3f(-.5 , +2,+.5);
+   glVertex3f(+.1 , +1,-.1);
+   glVertex3f(+.1 , +2,+.1);
+   glVertex3f(+.1 , +1,-.1);
+   glVertex3f(+.2 , +2,+.2);
+   glVertex3f(+.1 , +1,-.1);
+   glVertex3f(+.3 , +2,+.3);
+   glVertex3f(+.1 , +1,-.1);
+   glVertex3f(+.4 , +2,+.4);
+   glVertex3f(+.1 , +1,-.1);
+   glVertex3f(+.5 , +2,+.5);
+   
    glEnd();
    //  Undo transformations
    glPopMatrix();
 }
 
-/*
- *  OpenGL (GLUT) calls this routine to display the scene
- */
 void display()
 {
    const double len=1.5;  //  Length of axes
@@ -614,54 +558,17 @@ void display()
       case 0:
          cube(0,0,0 , 0.05,0.7,0.05 , 0);
          Tree(0,2,0, 0.3,0.5,0.3 , 0);
-         Star(0,2.4,0, .15,.15,.15 , 0);
-         Gift(0, -20, 3, 1,1,1,0);
+         Star(0,2.4,0, .15,.15,.15 , 0, 1, 1, 0);
+         Gift(0, -19, 3, 3,1.5,2,0);
+         cube(0,0,2, 0.08,0.7,0.08 , 120);
+         Tree(0,2.3,2, 0.4,0.6,0.4 , 120);
+         Star(0,2.8,2, .10,.10,.10 , 0, 1, .5, 0);
+         SuperGift(5, -32, -3, 3, 3, 4, 45, 0.545, 0.000, 0.3 ,0.294, 0.000, 0.510, 0.941, 1.000, 1.000);
          
-         //cube(1,0,0 , 0.2,0.2,0.4 , 45);
-         //cube(0,1,0 , 0.4,0.4,0.2 , 90);
+
          break;
-      //  Draw spheres
-      case 1:
-         sphere1(0,0,0 , 0.4);
-         sphere1(1,0,0 , 0.2);
-         sphere2(0,1,0 , 0.2);
-         break;
-      //  Line airplane
-      case 2:
-         PolyPlane(GL_LINE_LOOP , 0,0,0);
-         break;
-      //  Polygon airplane
-      case 3:
-         PolyPlane(GL_POLYGON , 0,0,0);
-         break;
-      //  Three flat airplanes
-      case 4:
-         FlatPlane( 0.0, 0.0, 0.0);
-         FlatPlane(-0.5, 0.5,-0.5);
-         FlatPlane(-0.5,-0.5,-0.5);
-         break;
-      // Three solid airplanes
-      case 5:
-         SolidPlane( 0, 0, 0 , 1,0,0 , 0, 1,0);
-         SolidPlane(-1, 1, 0 ,-1,0,0 , 0,-1,0);
-         SolidPlane(-1,-1, 0 ,-1,0,0 , 0, 1,0);
-         break;
-      // Mix of objects
-      case 6:
-         //  Cube
-         cube(-1,0,0 , 0.3,0.3,0.3 , 3*zh);
-         //  Ball
-         sphere1(0,0,0 , 0.3);
-         //  Solid Airplane
-         SolidPlane(Cos(zh),Sin(zh), 0 ,-Sin(zh),Cos(zh),0 , Cos(4*zh),0,Sin(4*zh));
-         //  Utah Teapot
-         glPushMatrix();
-         glTranslatef(0,0,-1);
-         glRotatef(zh,0,1,0);
-         glColor3f(Cos(zh)*Cos(zh),0,Sin(zh)*Sin(zh));
-         glutSolidTeapot(0.5);
-         glPopMatrix();
-         break;
+           
+     
    }
    //  White
    glColor3f(1,1,1);
@@ -687,7 +594,7 @@ void display()
    //  Five pixels from the lower left corner of the window
    glWindowPos2i(5,5);
    //  Print the text string
-   Print("Angle=%d,%d",th,ph);
+   //Print("Angle=%d,%d",th,ph);
    //  Render the scene
    glFlush();
    //  Make the rendered scene visible
@@ -742,7 +649,7 @@ void key(unsigned char ch,int x,int y)
  */
 void reshape(int width,int height)
 {
-   const double dim=5; //change zoom sig
+   const double dim=4; //change zoom sig
    //  Ratio of the width to the height of the window
    double w2h = (height>0) ? (double)width/height : 1;
    //  Set the viewport to the entire window
