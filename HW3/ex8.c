@@ -109,54 +109,54 @@ static void cube(double x,double y,double z,
    //  Undo transformations
    glPopMatrix();
 }
-static void TRI(double x, double y, double z, double dx,double dy,double dz,
+static void Tree(double x, double y, double z, double dx,double dy,double dz,
                  double th)
-   {  //  Save transformation
+   {  // Save transformation
       glPushMatrix();
-      //  Offset
+      // Offset
       glTranslated(x,y,z);
       glRotated(th,0,1,0);
       glScaled(dx,dy,dz);
       
-      //  Cube
+      //  Triangles
       glBegin(GL_TRIANGLES);           // 1st pyramid
       // Front
-      glColor3f(0.196, 0.804, 0.196);     // Green
+      glColor3f(0.196, 0.804, 0.196);     
       glVertex3f( 0, .8, 0);
-      glColor3f(0.000, 0.392, 0.000);     // Different Green
+      glColor3f(0.000, 0.392, 0.000);     
       glVertex3f(-1, -.8, 1);
-      glColor3f(0.000, 0.392, 0.000);     // Blue
+      glColor3f(0.000, 0.392, 0.000);    
       glVertex3f(1.0, -.8, 1.0);
  
       // Right
-      glColor3f(0.196, 0.804, 0.196);     // Red
+      glColor3f(0.196, 0.804, 0.196);    
       glVertex3f(0.0, .8, 0.0);
-      glColor3f(0.000, 0.392, 0.000);     // Blue
+      glColor3f(0.000, 0.392, 0.000);    
       glVertex3f(1.0, -.8, 1.0);
-      glColor3f(0.000, 0.392, 0.000);    // Green
+      glColor3f(0.000, 0.392, 0.000);    
       glVertex3f(1.0, -.8, -1.0);
  
       // Back
-      glColor3f(0.196, 0.804, 0.196);     // Red
+      glColor3f(0.196, 0.804, 0.196);   
       glVertex3f(0.0, .8, 0.0);
-      glColor3f(0.000, 0.392, 0.000);   // Green
+      glColor3f(0.000, 0.392, 0.000);   
       glVertex3f(1.0, -.8, -1.0);
-      glColor3f(0.000, 0.392, 0.000);     // Blue
+      glColor3f(0.000, 0.392, 0.000);    
       glVertex3f(-1.0, -.8, -1.0);
  
       // Left
-      glColor3f(0.196, 0.804, 0.196);       // Red
+      glColor3f(0.196, 0.804, 0.196);      
       glVertex3f( 0.0, .8, 0.0);
-      glColor3f(0.000, 0.392, 0.000);   // Blue
+      glColor3f(0.000, 0.392, 0.000);   
       glVertex3f(-1.0,-.8,-1.0);
-      glColor3f(0.000, 0.392, 0.000);       // Green
+      glColor3f(0.000, 0.392, 0.000);       
       glVertex3f(-1.0,-.8, 1.0);
-   glEnd();   // Done drawing the pyramid
+      glEnd();   // Done drawing the pyramid
       
       glRotated(45,0,1,0);
       glBegin(GL_TRIANGLES);  //2nd pyramid
       // Front
-      glColor3f(0.196, 0.804, 0.196);     // Red
+      glColor3f(0.196, 0.804, 0.196);     
       glVertex3f( 0, 0, 0);
       glColor3f(0.000, 0.392, 0.000);
       glVertex3f(-1.4, -2, 1.4);
@@ -164,7 +164,7 @@ static void TRI(double x, double y, double z, double dx,double dy,double dz,
       glVertex3f(1.4, -2.0, 1.4);
  
       // Right
-      glColor3f(0.196, 0.804, 0.196);     // Red
+      glColor3f(0.196, 0.804, 0.196);     
       glVertex3f(0, 0, 0);
       glColor3f(0.000, 0.392, 0.000);   
       glVertex3f(1.4, -2.0, 1.4);
@@ -172,7 +172,7 @@ static void TRI(double x, double y, double z, double dx,double dy,double dz,
       glVertex3f(1.4, -2.0, -1.4);
  
       // Back
-      glColor3f(0.196, 0.804, 0.196);     // Red
+      glColor3f(0.196, 0.804, 0.196);   
       glVertex3f(0.0, 0.0, 0.0);
       glColor3f(0.000, 0.392, 0.000);   
       glVertex3f(1.4, -2.0, -1.4);
@@ -224,13 +224,103 @@ static void TRI(double x, double y, double z, double dx,double dy,double dz,
       glColor3f(0.000, 0.392, 0.000);
       glVertex3f(-1.5,-3.3, 1.5);
       glEnd();
+      glPopMatrix();
    }
+
+   static void Star(double x, double y, double z, double dx,double dy,double dz,
+                 double th)
+   {
+      //  Save transformation
+      glPushMatrix();
+      //  Offset
+      glTranslated(x,y,z);
+      glRotated(th,0,1,0);
+      glScaled(dx,dy,dz);
+
+      //loop lines
+      glBegin(GL_LINE_LOOP);
+      glColor3f(1, 1 ,0);
+      glVertex3f(0.0,2.0,0.0);
+      glVertex3f(0.7,0.7,0.0);
+      glVertex3f(1.7,0.7,0.0);
+      glVertex3f(1,0.0,0.0);
+      glVertex3f(1.5,-1,0.0);
+      glVertex3f(0.0,0.0,0.0);
+      glVertex3f(-1.5,-1,0.0);
+      glVertex3f(-1,0.0,0.0);
+      glVertex3f(-1.7,.7,0.0);
+      glVertex3f(-.7,.7,0.0);
+
+
+      glEnd();
+   }
+
+  static void Gift(double x,double y,double z,
+                 double dx,double dy,double dz,
+                 double th)
+{
+   //  Save transformation
+   glPushMatrix();
+   //  Offset
+   glTranslated(x,y,z);
+   glRotated(th,0,1,0);
+   glScaled(dx,dy,dz);
+   //  Cube
+   glBegin(GL_QUADS);
+   //  Front
+   glColor3f(1,0,0);
+   glVertex3f(-1,-1, 1);
+   glVertex3f(+1,-1, 1);
+   glVertex3f(+1,+1, 1);
+   glVertex3f(-1,+1, 1);
+   //  Back
+   glColor3f(1,0,0);
+   glVertex3f(+1,-1,-1);
+   glVertex3f(-1,-1,-1);
+   glVertex3f(-1,+1,-1);
+   glVertex3f(+1,+1,-1);
+   //  Right
+   glColor3f(1,0,0);
+   glVertex3f(+1,-1,+1);
+   glVertex3f(+1,-1,-1);
+   glVertex3f(+1,+1,-1);
+   glVertex3f(+1,+1,+1);
+   //  Left
+   glColor3f(1,0,0);
+   glVertex3f(-1,-1,-1);
+   glVertex3f(-1,-1,+1);
+   glVertex3f(-1,+1,+1);
+   glVertex3f(-1,+1,-1);
+   //  Top
+   glColor3f(1,0,0);
+   glVertex3f(-1,+1,+1);
+   glVertex3f(+1,+1,+1);
+   glVertex3f(+1,+1,-1);
+   glVertex3f(-1,+1,-1);
+   //  Bottom
+   glColor3f(1,0,0);
+   glVertex3f(-1,-1,-1);
+   glVertex3f(+1,-1,-1);
+   glVertex3f(+1,-1,+1);
+   glVertex3f(-1,-1,+1);
+   //  End
+   glEnd();
+   glBegin(GL_LINE_LOOP);
+   glColor3f(1,2,0);
+   glVertex3f(-.1 , +2,-.1);
+   glVertex3f(+.1 , +1,-.1);
+   //TODO: Create variotions: AKA party string
+   
+   glEnd();
+   //  Undo transformations
+   glPopMatrix();
+}
 /*
  *  Draw vertex in polar coordinates
  */
 static void Vertex(double th,double ph)
 {
-   glColor3f(Cos(th)*Cos(th) , Sin(ph)*Sin(ph) , Sin(th)*Sin(th));
+   glColor3f(Sin(th)*Cos(ph),0,0);
    glVertex3d(Sin(th)*Cos(ph) , Sin(ph) , Cos(th)*Cos(ph));
 }
 
@@ -523,7 +613,10 @@ void display()
       //  Draw cubes
       case 0:
          cube(0,0,0 , 0.05,0.7,0.05 , 0);
-         TRI(0,2,0, 0.3,0.5,0.3 , 0);
+         Tree(0,2,0, 0.3,0.5,0.3 , 0);
+         Star(0,2.4,0, .15,.15,.15 , 0);
+         Gift(0, -20, 3, 1,1,1,0);
+         
          //cube(1,0,0 , 0.2,0.2,0.4 , 45);
          //cube(0,1,0 , 0.4,0.4,0.2 , 90);
          break;
