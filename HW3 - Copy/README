@@ -1,0 +1,22 @@
+HW3: 3D Objects - Sigrunn Sky
+
+Time to complete assignment: 5 hours
+ 
+ External Resources:
+ *Used Ex8.c from class as my starting point
+ *Used https://www.ntu.edu.sg/home/ehchua/programming/opengl/CG_Examples.html To help me make the triangles for the christmas tree
+ *Used http://prideout.net/archive/colors.php to help me pick colors
+ 
+
+Willem A. (Vlakkies) Schreuder
+CSCI4229/5229 Fall 2016
+
+
+Key bindings
+  a          Toggle axes
+  arrows     Change view angle
+  0          Reset view angle
+  ESC        Exit
+
+
+You should see two presents and two christmas trees. :)

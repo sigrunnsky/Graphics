@@ -1,0 +1,14 @@
+HW4: Sigrunn Sky
+
+Willem A. (Vlakkies) Schreuder
+CSCI4229/5229 Fall 2016
+
+
+Key bindings
+  m          Toggle between perspective, orthogonal and First Person Navigation
+  +/-        Changes field of view for perspective
+  a          Toggle axes
+  arrows     Change view angle
+  PgDn/PgUp  Zoom in and out
+  0          Reset view angle
+  ESC        Exit
