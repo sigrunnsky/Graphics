@@ -1,5 +1,5 @@
-# Example 9
-EXE=ex9
+# HW4_SigrunnSky
+EXE=hw4
 
 # Main target
 all: $(EXE)
@@ -30,7 +30,7 @@ endif
 	g++ -c $(CFLG) $<
 
 #  Link
-ex9:ex9.o
+hw4:hw4.o
 	gcc -O3 -o $@ $^   $(LIBS)
 
 #  Clean

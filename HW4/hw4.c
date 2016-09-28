@@ -83,7 +83,7 @@ static void cube(double x,double y,double z,
                  double dx,double dy,double dz,
                  double th)
 
-{
+   {
    //  Save transformation
    glPushMatrix();
    //  Offset
@@ -132,7 +132,7 @@ static void cube(double x,double y,double z,
    glEnd();
    //  Undo transformations
    glPopMatrix();
-}
+   }
 static void Tree(double x, double y, double z, double dx,double dy,double dz,
                  double th)
    {  // Save transformation
@@ -247,6 +247,7 @@ static void Tree(double x, double y, double z, double dx,double dy,double dz,
       glVertex3f(-1.5,-3.3,-1.5);
       glColor3f(0.000, 0.392, 0.000);
       glVertex3f(-1.5,-3.3, 1.5);
+      
       glEnd();
       glPopMatrix();
    }
@@ -262,8 +263,11 @@ static void Tree(double x, double y, double z, double dx,double dy,double dz,
       glScaled(dx,dy,dz);
 
       //loop lines
-      glBegin(GL_LINE_LOOP);
+
       glColor3f(r, g ,b);
+      glBegin(GL_LINE_LOOP);
+     
+
       glVertex3f(0.0,2.0,0.0);
       glVertex3f(0.7,0.7,0.0);
       glVertex3f(1.7,0.7,0.0);
@@ -277,7 +281,7 @@ static void Tree(double x, double y, double z, double dx,double dy,double dz,
 
 
       glEnd();
-      glPopMatrix(); //(When I uncomment this my presents disapear...)
+      glPopMatrix(); //( Jesus When I uncomment this my presents disapear...)
    }
 
   static void Gift(double x,double y,double z,
@@ -711,6 +715,12 @@ void reshape(int width,int height)
 /*
  *  GLUT calls this toutine when there is nothing else to do
  */
+void idle()
+{
+  //double t = glutGet(GLUT_ELAPSED_TIME)/1000.0;
+  // zh = fmod(90*t,360);
+   glutPostRedisplay();
+}
 
 /*
  *  Start up GLUT and tell it what to do
@@ -725,6 +735,7 @@ int main(int argc,char* argv[])
    //  Create the window
    glutCreateWindow("HW4: Sigrunn Sky");
    //  Tell GLUT to call "idle" when there is nothing else to do
+   glutIdleFunc(idle);
    //  Tell GLUT to call "display" when the scene should be drawn
    glutDisplayFunc(display);
    //  Tell GLUT to call "reshape" when the window is resized
