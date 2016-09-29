@@ -23,11 +23,23 @@
 
 int axes=0;       //  Display axes
 int mode=0;       //  Projection mode
-int th=0;         //  Azimuth of view angle
+int th=225;         //  Azimuth of view angle
 int ph=0;         //  Elevation of view angle
 int fov=55;       //  Field of view (for perspective)
 double asp=1;     //  Aspect ratio
 double dim=5.0;   //  Size of world
+
+
+int fps= 0;         //First person toggle
+int turn = 300;  // turning degrees.
+
+int xPoint = 0;  //Eyeballs pointing in x & z position 
+int zPoint = 0;
+
+int xEye = 10; //Eyeball location
+int yEye = 0;
+int zEye = 10;
+
 
 //  Cosine and Sine in degrees
 #define Cos(th) cos(3.1415927/180*(th))
@@ -61,12 +73,20 @@ static void Project()
    glMatrixMode(GL_PROJECTION);
    //  Undo previous transformations
    glLoadIdentity();
+   
+   if(!fps)
+   {
    //  Perspective transformation
-   if (mode)
-      gluPerspective(fov,asp,dim/4,4*dim);
+      if (mode)
+         gluPerspective(fov,asp,dim/4,4*dim);
    //  Orthogonal projection
+      else
+         glOrtho(-asp*dim,+asp*dim, -dim,+dim, -dim,+dim);
+   }
    else
-      glOrtho(-asp*dim,+asp*dim, -dim,+dim, -dim,+dim);
+   {
+      gluPerspective(fov, asp, dim/4, 4*dim);
+   }
    //  Switch to manipulating the model matrix
    glMatrixMode(GL_MODELVIEW);
    //  Undo previous transformations
@@ -281,7 +301,7 @@ static void Tree(double x, double y, double z, double dx,double dy,double dz,
 
 
       glEnd();
-      glPopMatrix(); //( Jesus When I uncomment this my presents disapear...)
+      //glPopMatrix(); //( Jesus When I uncomment this my presents disapear...)
    }
 
   static void Gift(double x,double y,double z,
@@ -576,18 +596,27 @@ void display()
    //  Undo previous transformations
    glLoadIdentity();
    
-   if (mode)
+   if (!fps)
    {
-      double Ex = -2*dim*Sin(th)*Cos(ph);
-      double Ey = +2*dim        *Sin(ph);
-      double Ez = +2*dim*Cos(th)*Cos(ph);
-      gluLookAt(Ex,Ey,Ez , 0,0,0 , 0,Cos(ph),0);
+      if (mode)
+      {
+         double Ex = -2*dim*Sin(th)*Cos(ph);
+         double Ey = +2*dim        *Sin(ph);
+         double Ez = +2*dim*Cos(th)*Cos(ph);
+         gluLookAt(Ex,Ey,Ez , 0,0,0 , 0,Cos(ph),0);
+      }
+      //  Orthogonal - set world orientation
+      else
+      {
+         glRotatef(ph,1,0,0);
+         glRotatef(th,0,1,0);
+      }
    }
-   //  Orthogonal - set world orientation
-   else
+   else 
    {
-      glRotatef(ph,1,0,0);
-      glRotatef(th,0,1,0);
+      xPoint = +2*dim*Sin(turn);
+      zPoint = -2*dim*Cos(turn);
+      gluLookAt(xEye,yEye,zEye, xPoint+xEye,yEye,zEye+zPoint, 0,1,0); 
    }
 
    //  Decide what to draw
@@ -631,7 +660,14 @@ void display()
    //  Five pixels from the lower left corner of the window
    glWindowPos2i(5,5);
    //  Print the text string
-   Print("Angle=%d,%d  Dim=%.1f FOV=%d Projection=%s",th,ph,dim,fov,mode?"Perpective":"Orthogonal");
+   if (!fps)
+   {
+      Print("Angle=%d,%d  Dim=%.1f FOV=%d Projection=%s",th,ph,dim,fov,mode?"Perpective":"Orthogonal");
+   }
+   else 
+   {
+      Print("FPS",turn);
+   }
    //  Render the scene
    glFlush();
    //  Make the rendered scene visible
@@ -643,28 +679,58 @@ void display()
  */
 void special(int key,int x,int y)
 {
-   //  Right arrow key - increase angle by 5 degrees
-   if (key == GLUT_KEY_RIGHT)
-      th += 5;
-   //  Left arrow key - decrease angle by 5 degrees
-   else if (key == GLUT_KEY_LEFT)
-      th -= 5;
-   //  Up arrow key - increase elevation by 5 degrees
-   else if (key == GLUT_KEY_UP)
-      ph += 5;
-   //  Down arrow key - decrease elevation by 5 degrees
-   else if (key == GLUT_KEY_DOWN)
-      ph -= 5;
-   //  PageUp key - increase dim
-   else if (key == GLUT_KEY_PAGE_UP)
-      dim += 0.1;
-   //  PageDown key - decrease dim
-   else if (key == GLUT_KEY_PAGE_DOWN && dim>1)
-      dim -= 0.1;
+   if (!fps)
+   {
+      //  Right arrow key - increase angle by 5 degrees
+      if (key == GLUT_KEY_RIGHT)
+         th += 5;
+      //  Left arrow key - decrease angle by 5 degrees
+      else if (key == GLUT_KEY_LEFT)
+         th -= 5;
+      //  Up arrow key - increase elevation by 5 degrees
+      else if (key == GLUT_KEY_UP)
+         ph += 5;
+      //  Down arrow key - decrease elevation by 5 degrees
+      else if (key == GLUT_KEY_DOWN)
+         ph -= 5;
+      //  PageUp key - increase dim
+      else if (key == GLUT_KEY_PAGE_UP)
+         dim += 0.1;
+      //  PageDown key - decrease dim
+      else if (key == GLUT_KEY_PAGE_DOWN && dim>1)
+         dim -= 0.1;
 
-   //  Keep angles to +/-360 degrees
-   th %= 360;
-   ph %= 360;
+      //  Keep angles to +/-360 degrees
+      th %= 360;
+      ph %= 360;
+
+   }
+   else
+   {
+      double move = 0.07;
+      //  Right arrow key - increase angle by 5 degrees
+      if (key == GLUT_KEY_RIGHT){
+         turn += 5;
+      }
+      //  Left arrow key - decrease angle by 5 degrees
+      else if (key == GLUT_KEY_LEFT){
+         turn -= 5;
+      }
+      //  Up arrow key - increase elevation by 5 degrees
+      else if (key == GLUT_KEY_UP){
+         xEye += xPoint*move;
+         zEye += zPoint*move;
+      }
+      //  Down arrow key - decrease elevation by 5 degrees
+      else if (key == GLUT_KEY_DOWN) {
+         xEye -= xPoint*move;
+         zEye -= zPoint*move;
+      }
+      turn %=360;
+       Project();
+   //  Tell GLUT it is necessary to redisplay the scene
+      glutPostRedisplay();
+   }
    //  Update projection
    Project();
    //  Tell GLUT it is necessary to redisplay the scene
@@ -688,11 +754,15 @@ void key(unsigned char ch,int x,int y)
    //  Switch display mode
    else if (ch == 'm' || ch == 'M')
       mode = 1-mode;
-   //  Change field of view angle
-   else if (ch == '-' && ch>1)
+
+   else if (ch == 'f' || ch == 'F')
+      fps = 1-fps;
+  //  Change field of view angle
+   if (ch == '-' && ch>1)
       fov--;
    else if (ch == '+' && ch<179)
       fov++;
+
    //  Reproject
    Project();
    //  Tell GLUT it is necessary to redisplay the scene

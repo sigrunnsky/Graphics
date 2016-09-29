@@ -17,4 +17,12 @@ Key bindings
   arrows     Change view angle
   0          Reset view angle
   ESC        Exit
+  F          Change to First Person
 
+  FPS:
+  Up arrow:       Move forward
+  Down arrow:     Move Backwards
+  Left arrow:     Turn Left
+  Right arrow:    Turn Right
+
+  
