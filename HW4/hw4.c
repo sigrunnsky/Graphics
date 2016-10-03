@@ -1,7 +1,6 @@
 /*  HW4: Sigrunn Sky
- //Used Ex8.c from class as my starting point
- //Used https://www.ntu.edu.sg/home/ehchua/programming/opengl/CG_Examples.html To help me make the triangles for the christmas tree
- //Used http://prideout.net/archive/colors.php to help me pick colors
+ //Used Ex8.c and my HW3 as my starting point
+ //Referenced https://github.com/taylorjandrews/CSCI-4229/tree/master/Projections for help understanding how to get started and with the math of rotations
  *
  *  Key bindings:
  *  a          Toggle axes
@@ -23,7 +22,7 @@
 
 int axes=0;       //  Display axes
 int mode=0;       //  Projection mode
-int th=225;         //  Azimuth of view angle
+int th=225;       //  View angle -- so it points at the trees
 int ph=0;         //  Elevation of view angle
 int fov=55;       //  Field of view (for perspective)
 double asp=1;     //  Aspect ratio
@@ -31,14 +30,14 @@ double dim=5.0;   //  Size of world
 
 
 int fps= 0;         //First person toggle
-int turn = 300;  // turning degrees.
+int turn =300.0;  // turning degrees.. 300 fo you can see the trees.
 
-int xPoint = 0;  //Eyeballs pointing in x & z position 
-int zPoint = 0;
+double xPoint = 0;  //Eyeballs pointing in x & z position 
+double zPoint = 0;
 
-int xEye = 10; //Eyeball location
-int yEye = 0;
-int zEye = 10;
+double xEye = 10; //Eyeball location
+double yEye = 0;
+double zEye = 10;
 
 
 //  Cosine and Sine in degrees
@@ -83,7 +82,7 @@ static void Project()
       else
          glOrtho(-asp*dim,+asp*dim, -dim,+dim, -dim,+dim);
    }
-   else
+   else // for fps mode... Using Perspective.
    {
       gluPerspective(fov, asp, dim/4, 4*dim);
    }
@@ -598,7 +597,7 @@ void display()
    
    if (!fps)
    {
-      if (mode)
+      if (mode) //Perspective.
       {
          double Ex = -2*dim*Sin(th)*Cos(ph);
          double Ey = +2*dim        *Sin(ph);
@@ -614,9 +613,9 @@ void display()
    }
    else 
    {
-      xPoint = +2*dim*Sin(turn);
+      xPoint = +2*dim*Sin(turn); //Set the camera vector based on the turn (degrees)
       zPoint = -2*dim*Cos(turn);
-      gluLookAt(xEye,yEye,zEye, xPoint+xEye,yEye,zEye+zPoint, 0,1,0); 
+      gluLookAt(xEye,yEye,zEye, xPoint+xEye,yEye,zPoint+zEye, 0,1,0); 
    }
 
    //  Decide what to draw
@@ -662,11 +661,11 @@ void display()
    //  Print the text string
    if (!fps)
    {
-      Print("Angle=%d,%d  Dim=%.1f FOV=%d Projection=%s",th,ph,dim,fov,mode?"Perpective":"Orthogonal");
+      Print("FPS: Off Angle=%d,%d  Dim=%.1f FOV=%d Projection=%s",th,ph,dim,fov,mode?"Perpective":"Orthogonal");
    }
    else 
    {
-      Print("FPS",turn);
+      Print("FPS: On View Angle=%d",turn);
    }
    //  Render the scene
    glFlush();
@@ -682,54 +681,57 @@ void special(int key,int x,int y)
    if (!fps)
    {
       //  Right arrow key - increase angle by 5 degrees
-      if (key == GLUT_KEY_RIGHT)
+      if (key == GLUT_KEY_RIGHT){
          th += 5;
+      }
       //  Left arrow key - decrease angle by 5 degrees
-      else if (key == GLUT_KEY_LEFT)
+      else if (key == GLUT_KEY_LEFT){
          th -= 5;
+      }
       //  Up arrow key - increase elevation by 5 degrees
-      else if (key == GLUT_KEY_UP)
+      else if (key == GLUT_KEY_UP){
          ph += 5;
+      }
       //  Down arrow key - decrease elevation by 5 degrees
-      else if (key == GLUT_KEY_DOWN)
+      else if (key == GLUT_KEY_DOWN){
          ph -= 5;
+      }
       //  PageUp key - increase dim
-      else if (key == GLUT_KEY_PAGE_UP)
+      else if (key == GLUT_KEY_PAGE_UP){
          dim += 0.1;
+      }
       //  PageDown key - decrease dim
-      else if (key == GLUT_KEY_PAGE_DOWN && dim>1)
+      else if (key == GLUT_KEY_PAGE_DOWN && dim>1){
          dim -= 0.1;
+      }
 
       //  Keep angles to +/-360 degrees
       th %= 360;
       ph %= 360;
-
    }
+
    else
    {
-      double move = 0.07;
-      //  Right arrow key - increase angle by 5 degrees
+      double move = 0.05; 
+      //  Right arrow key - increase angle by 1 degrees
       if (key == GLUT_KEY_RIGHT){
-         turn += 5;
+         turn += 1;
       }
-      //  Left arrow key - decrease angle by 5 degrees
+      //  Left arrow key - decrease angle by 1 degrees
       else if (key == GLUT_KEY_LEFT){
-         turn -= 5;
+         turn -= 1;
       }
-      //  Up arrow key - increase elevation by 5 degrees
+      //   Move in the correct vector direction
       else if (key == GLUT_KEY_UP){
          xEye += xPoint*move;
          zEye += zPoint*move;
       }
-      //  Down arrow key - decrease elevation by 5 degrees
+      //  
       else if (key == GLUT_KEY_DOWN) {
          xEye -= xPoint*move;
          zEye -= zPoint*move;
       }
       turn %=360;
-       Project();
-   //  Tell GLUT it is necessary to redisplay the scene
-      glutPostRedisplay();
    }
    //  Update projection
    Project();
@@ -787,8 +789,8 @@ void reshape(int width,int height)
  */
 void idle()
 {
-  //double t = glutGet(GLUT_ELAPSED_TIME)/1000.0;
-  // zh = fmod(90*t,360);
+   //double t = glutGet(GLUT_ELAPSED_TIME)/1000.0;
+   //zh = fmod(90*t,360);
    glutPostRedisplay();
 }
 

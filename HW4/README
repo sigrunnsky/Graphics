@@ -1,12 +1,6 @@
 HW4: 3D Objects - Sigrunn Sky
 
-Time to complete assignment: 5 hours
- 
- External Resources:
- *Used my HW3.c as my starting point
- *
- 
-
+Time to complete assignment: 8 hours
 Willem A. (Vlakkies) Schreuder
 CSCI4229/5229 Fall 2016
 
@@ -17,9 +11,10 @@ Key bindings
   arrows     Change view angle
   0          Reset view angle
   ESC        Exit
-  F          Change to First Person
-
-  FPS:
+   
+  FPS Keys:
+  --------------------------------------------------
+  F               Change to First Person
   Up arrow:       Move forward
   Down arrow:     Move Backwards
   Left arrow:     Turn Left
