@@ -1,8 +1,8 @@
 /* Sigrunn Sky HW5
- *
- *  Lighting
- *
- *  Demonstrates basic lighting using a sphere and a cube.
+ * Used EX13.c as a template/starting point
+ * https://www.opengl.org/discussion_boards/showthread.php/167115-Creating-cylinder for help on math for cyl
+ * 
+ * Lighting
  *
  *  Key bindings:
  *  l          Toggles lighting
@@ -24,19 +24,24 @@
  *  arrows     Change view angle
  *  PgDn/PgUp  Zoom in and out
  *  0          Reset view angle
+ *  f          First Person Toggle
  *  ESC        Exit
  */
 #include "CSCIx229.h"
-
+//All of these are taken from EX13.
 int axes=1;       //  Display axes
 int mode=1;       //  Projection mode
 int move=1;       //  Move light
 int th=0;         //  Azimuth of view angle
-int ph=0;         //  Elevation of view angle
+int ph=2;         //  Elevation of view angle
 int fov=55;       //  Field of view (for perspective)
 int light=1;      //  Lighting
 double asp=1;     //  Aspect ratio
 double dim=3.0;   //  Size of world
+int texture[0];
+
+int fps= 0;         //First person toggle
+
 // Light values
 int one       =   1;  // Unit value
 int distance  =   5;  // Light distance
@@ -44,19 +49,31 @@ int inc       =  10;  // Ball increment
 int smooth    =   1;  // Smooth/Flat shading
 int local     =   0;  // Local Viewer Model
 int emission  =   0;  // Emission intensity (%)
-int ambient   =  30;  // Ambient intensity (%)
+int ambient   =  33;  // Ambient intensity (%)
 int diffuse   = 100;  // Diffuse intensity (%)
 int specular  =   0;  // Specular intensity (%)
 int shininess =   0;  // Shininess (power of two)
 float shiny   =   1;  // Shininess (value)
 int zh        =  90;  // Light azimuth
-float ylight  =   0;  // Elevation of light
+float ylight  =   2;  // Elevation of light
+
+//fps
+int turn =300.0;  // turning degrees.. 300 fo you can see the trees.
+
+double xPoint = 0;  //Eyeballs pointing in x & z position 
+double zPoint = 0;
+
+double xEye = 10; //Eyeball location
+double yEye = 1;
+double zEye = 10;
+
 
 static void cyl(double x,double y,double z,
                  double dx,double dy,double dz,
-                 double th, float radius, float height)
+                 double th, float radius, float halfheight)
 {
-   float white[] = {1,1,1,1};
+     //  Set specular color to red
+   float white[] = {1,0,0,1};
    float black[] = {0,0,0,1};
    glMaterialf(GL_FRONT_AND_BACK,GL_SHININESS,shiny);
    glMaterialfv(GL_FRONT_AND_BACK,GL_SPECULAR,white);
@@ -65,126 +82,281 @@ static void cyl(double x,double y,double z,
    glPushMatrix();
    //  Offset, scale and rotate
    glTranslated(x,y,z);
-   glRotated(th,0,1,0);
+   glRotated(th,1,0,0); //funky
    glScaled(dx,dy,dz);
    //  Offset, scale and rotate
-   
-   glColor3f(1.0, 0.0, 1.0);
+     
+   glColor3f(.5,.3,.1);//Brown
+  
+   //Top
+   glBegin(GL_TRIANGLE_FAN);
+
+   glNormal3d(0,1,0);
+      glVertex3d(0.0, halfheight, 0.0);
+
+      for(double j = 0.0; j < 360; j+=.125) {
+         glVertex3d(radius * cos(j), halfheight, radius * sin(j));
+      }
+   glEnd();
+
+   //Bottom
+   glBegin(GL_TRIANGLE_FAN);
+   glNormal3d(0,-1,0);
+      glVertex3d(0.0, -halfheight, 0.0);
+
+      for(double j = 0.0; j < 360; j+=.125) {
+         glVertex3d(radius * cos(j), -halfheight, radius * sin(j));
+      }
+   glEnd();
+
    glBegin(GL_TRIANGLE_STRIP);
    for (int i = 0; i <= 360; i++) {
       double x = radius * Cos(i);
-      double y = height;
+      double y = halfheight;
       double z = radius * Sin(i);
 
-      //glColor3f(j/306, j/360, j/360);
-
-      glNormal3d(Cos(i), 1, Sin(i));
+      glNormal3d(x, y, z);
 
       glVertex3d(x, y, z);
       glVertex3d(x, -y, z);
    }
    glEnd();
 
-   glColor3f(1.0, 0.0, 0.0); //Set color to red
-  
-
-   double j; 
-
-   glNormal3d(0,1,0);
-
-   /* Top of Cylinder */
-   glBegin(GL_TRIANGLE_FAN);
-      glVertex3d(0.0, height, 0.0);
-
-      for(j = 0.0; j < 360; j+=.125) {
-         glVertex3d(radius * cos(j), height, radius * sin(j));
-      }
-   glEnd();
-
-   glNormal3d(0,-1,0);
-
-   /* Bottom of Cylinder */
-   glBegin(GL_TRIANGLE_FAN);
-      glVertex3d(0.0, -height, 0.0);
-
-      for(j = 0.0; j < 360; j+=.125) {
-         glVertex3d(radius * cos(j), -height, radius * sin(j));
-      }
-   glEnd();
-
    glPopMatrix(); 
 }
-
-     
-/*
- *  Draw a cube
- *     at (x,y,z)
- *     dimentions (dx,dy,dz)
- *     rotated th about the y axis
- */
-static void cube(double x,double y,double z,
-                 double dx,double dy,double dz,
-                 double th)
+static void flooring(double x, double y, double z, double dx,double dy,double dz,
+                 double th )
 {
-   //  Set specular color to white
-   float white[] = {1,1,1,1};
-   float black[] = {0,0,0,1};
-   glMaterialf(GL_FRONT_AND_BACK,GL_SHININESS,shiny);
-   glMaterialfv(GL_FRONT_AND_BACK,GL_SPECULAR,white);
-   glMaterialfv(GL_FRONT_AND_BACK,GL_EMISSION,black);
+	glPushMatrix();
+
+	glTranslated(x,y,z);
+    glRotated(th,0,1,0);
+    glScaled(dx,dy,dz);
+
+	glBegin(GL_POLYGON);
+	glNormal3f(0, 1, 0);
+   glColor3f(0.412, 0.412, 0.412); //dim grey slate
+	
+	glVertex3f(-1, 0, -1);
+	glVertex3f(-1, 0, 1 );
+	glVertex3f( 1, 0, 1);
+	glVertex3f( 1, 0, -1);
+	glEnd();
+
+	glPopMatrix();
+
+}
+static void Tree(double x, double y, double z, double dx,double dy,double dz,
+                 double th)
+   {  // Save transformation
+      glPushMatrix();
+      // Offset
+      glTranslated(x,y,z);
+      glRotated(th,0,1,0);
+      glScaled(dx,dy,dz);
+      
+      //  Triangles
+      glBegin(GL_TRIANGLES);           // 1st pyramid
+      // Front
+      glNormal3f(cos(45),1,sin(45));
+      glColor3f(0.196, 0.804, 0.196);     
+      glVertex3f( 0, 1, 0); //top point
+      glColor3f(0.000, 0.392, 0.000);     
+      glVertex3f(1, 0, 0); 
+      glColor3f(0.000, 0.392, 0.000);    
+      glVertex3f(0, 0, 1);
+ 
+      // Right
+      glNormal3f(cos(45),1,-sin(45));
+      glColor3f(0.196, 0.804, 0.196);    
+      glVertex3f(0.0, 1, 0.0);
+      glColor3f(0.000, 0.392, 0.000);    
+      glVertex3f(1, 0, 0);
+      glColor3f(0.000, 0.392, 0.000);    
+      glVertex3f(0, 0, -1);
+ 
+      // Back
+      glNormal3f(-cos(45),1,-sin(45));
+      glColor3f(0.196, 0.804, 0.196);   
+      glVertex3f(0.0, 1, 0.0);
+      glColor3f(0.000, 0.392, 0.000);   
+      glVertex3f(-1, 0, 0);
+      glColor3f(0.000, 0.392, 0.000);    
+      glVertex3f(0, 0, -1.0);
+ 
+      // Left
+      glNormal3f(-cos(45),1,sin(45));
+      glColor3f(0.196, 0.804, 0.196);      
+      glVertex3f( 0.0, 1, 0.0);
+      glColor3f(0.000, 0.392, 0.000);   
+      glVertex3f(-1,0,0);
+      glColor3f(0.000, 0.392, 0.000);       
+      glVertex3f(0,0, 1.0);
+      glEnd();   // Done drawing the pyramid
+      
+      glBegin(GL_QUADS);
+      glColor3f(0.000, 0.392, 0.000); 
+      glNormal3f(0, -1, 0);
+      glVertex3f(-1, 0, 0);
+      glVertex3f(0, 0, 1);
+      glVertex3f(1, 0, 0);
+      glVertex3f(0, 0, -1);
+      glEnd();
+      glPopMatrix();
+   }
+
+  
+//experimenting with making all colors into parameters
+static void SuperGift(double x,double y,double z,
+                 double dx,double dy,double dz,
+                 double th, double mr, double mg, double mb, double tr, double tg, double tb, double lr, double lg, double lb )
+{
    //  Save transformation
    glPushMatrix();
-   //  Offset, scale and rotate
+   //  Offset
    glTranslated(x,y,z);
-   glRotated(th,0,1,0);
+   glRotated(th,0,0,0);
    glScaled(dx,dy,dz);
-   //  Cube
+   //  Cube for the gift itself
    glBegin(GL_QUADS);
    //  Front
-   glColor3f(1,0,0);
-   glNormal3f( 0, 0, 1);
+   glColor3f(mr,mg,mb);
+   glNormal3f(0,0,1);
    glVertex3f(-1,-1, 1);
    glVertex3f(+1,-1, 1);
    glVertex3f(+1,+1, 1);
    glVertex3f(-1,+1, 1);
    //  Back
-   glColor3f(0,0,1);
-   glNormal3f( 0, 0,-1);
+   glColor3f(mr,mg,mb);
+   glNormal3f(0,0,-1);
    glVertex3f(+1,-1,-1);
    glVertex3f(-1,-1,-1);
    glVertex3f(-1,+1,-1);
    glVertex3f(+1,+1,-1);
    //  Right
-   glColor3f(1,1,0);
-   glNormal3f(+1, 0, 0);
+   glColor3f(mr,mg,mb);
+   glNormal3f(1,0,0);
    glVertex3f(+1,-1,+1);
    glVertex3f(+1,-1,-1);
    glVertex3f(+1,+1,-1);
    glVertex3f(+1,+1,+1);
    //  Left
-   glColor3f(0,1,0);
-   glNormal3f(-1, 0, 0);
+   glColor3f(mr,mg,mb);
+   glNormal3f(-1,0,0);
    glVertex3f(-1,-1,-1);
    glVertex3f(-1,-1,+1);
    glVertex3f(-1,+1,+1);
    glVertex3f(-1,+1,-1);
    //  Top
-   glColor3f(0,1,1);
-   glNormal3f( 0,+1, 0);
+   glColor3f(mr,mg,mb);
+   glNormal3f(0,1,0);
    glVertex3f(-1,+1,+1);
    glVertex3f(+1,+1,+1);
    glVertex3f(+1,+1,-1);
    glVertex3f(-1,+1,-1);
    //  Bottom
-   glColor3f(1,0,1);
-   glNormal3f( 0,-one, 0);
+   glColor3f(mr,mg,mb);
+   glNormal3f(0,-1,0);
    glVertex3f(-1,-1,-1);
    glVertex3f(+1,-1,-1);
    glVertex3f(+1,-1,+1);
    glVertex3f(-1,-1,+1);
    //  End
    glEnd();
-   //  Undo transofrmations
+
+   glBegin(GL_QUADS);
+
+   //Now create the Lid of the Gift
+   //  Front
+   glColor3f(tr,tg,tb);
+   glNormal3f(0,0,1);
+   glVertex3f(-1.1,.5, 1.1);
+   glVertex3f(+1.1,.5, 1.1);
+   glVertex3f(+1.1,+1.1, 1.1);
+   glVertex3f(-1.1,+1.1, 1.1);
+   //  Back
+   glColor3f(tr,tg,tb);
+   glNormal3f(0,0,-1);
+   glVertex3f(+1.1,.5,-1.1);
+   glVertex3f(-1.1,.5,-1.1);
+   glVertex3f(-1.1,+1.1,-1.1);
+   glVertex3f(+1.1,+1.1,-1.1);
+   //  Right
+   glColor3f(tr,tg,tb);
+   glNormal3f(1, 0, 0);
+   glVertex3f(+1.1,.5,+1.1);
+   glVertex3f(+1.1,.5,-1.1);
+   glVertex3f(+1.1,+1.1,-1.1);
+   glVertex3f(+1.1,+1.1,+1.1);
+   //  Left
+   glColor3f(tr,tg,tb);
+   glNormal3f(-1,0,0);
+   glVertex3f(-1.1,.5,-1.1);
+   glVertex3f(-1.1,.5,+1.1);
+   glVertex3f(-1.1,+1.1,+1.1);
+   glVertex3f(-1.1,+1.1,-1.1);
+   //  Top
+   glColor3f(tr,tg,tb);
+   glNormal3f(0,1,0);
+   glVertex3f(-1.1,+1.1,+1.1);
+   glVertex3f(+1.1,+1.1,+1.1);
+   glVertex3f(+1.1,+1.1,-1.1);
+   glVertex3f(-1.1,+1.1,-1.1);
+   //  Bottom
+   glColor3f(tr,tg,tb);
+   glNormal3f(0,-1,0);
+   glVertex3f(-1.1,.5,-1.1);
+   glVertex3f(+1.1,.5,-1.1);
+   glVertex3f(+1.1,.5,+1.1);
+   glVertex3f(-1.1,.5,+1.1);
+   //  End
+   glEnd();
+
+   glBegin(GL_LINE_LOOP);
+   glNormal3f(0, 1, 0);
+   glColor3f(lr,lg,lb);
+   glVertex3f(-.1 , +2,-.1); //create Decorations up top of gift
+   glVertex3f(+.1 , +1,-.1);
+   glVertex3f(-.2 , +2,-.2);
+   glVertex3f(+.1 , +1,-.1);
+   glVertex3f(-.3 , +2,-.3);
+   glVertex3f(+.1 , +1,-.1);
+   glVertex3f(-.4 , +2,-.4);
+   glVertex3f(+.1 , +1,-.1);
+   glVertex3f(-.5 , +2,-.5);
+   glVertex3f(+.1 , +1,-.1);
+   glVertex3f(+.1 , +2,+.1);
+   glVertex3f(+.1 , +1,-.1);
+   glVertex3f(+.2 , +2,-.2);
+   glVertex3f(+.1 , +1,-.1);
+   glVertex3f(+.3 , +2,-.3);
+   glVertex3f(+.1 , +1,-.1);
+   glVertex3f(+.4 , +2,-.4);
+   glVertex3f(+.1 , +1,-.1);
+   glVertex3f(+.5 , +2,-.5);
+   glVertex3f(+.1 , +1,-.1);
+   glVertex3f(-.1 , +2,+.1);
+   glVertex3f(+.1 , +1,-.1);
+   glVertex3f(-.2 , +2,+.2);
+   glVertex3f(+.1 , +1,-.1);
+   glVertex3f(-.3 , +2,+.3);
+   glVertex3f(+.1 , +1,-.1);
+   glVertex3f(-.4 , +2,+.4);
+   glVertex3f(+.1 , +1,-.1);
+   glVertex3f(-.5 , +2,+.5);
+   glVertex3f(+.1 , +1,-.1);
+   glVertex3f(+.1 , +2,+.1);
+   glVertex3f(+.1 , +1,-.1);
+   glVertex3f(+.2 , +2,+.2);
+   glVertex3f(+.1 , +1,-.1);
+   glVertex3f(+.3 , +2,+.3);
+   glVertex3f(+.1 , +1,-.1);
+   glVertex3f(+.4 , +2,+.4);
+   glVertex3f(+.1 , +1,-.1);
+   glVertex3f(+.5 , +2,+.5);
+   glVertex3f(+.1, +1, -.1);
+   glEnd();
+   //  Undo transformations
    glPopMatrix();
 }
 
@@ -202,7 +374,8 @@ static void Vertex(double th,double ph)
    glVertex3d(x,y,z);
 }
 
-/*
+/* comes from EX13
+
  *  Draw a ball
  *     at (x,y,z)
  *     radius (r)
@@ -251,18 +424,27 @@ void display()
    //  Undo previous transformations
    glLoadIdentity();
    //  Perspective - set eye position
-   if (mode)
+   if (!fps)
    {
-      double Ex = -2*dim*Sin(th)*Cos(ph);
-      double Ey = +2*dim        *Sin(ph);
-      double Ez = +2*dim*Cos(th)*Cos(ph);
-      gluLookAt(Ex,Ey,Ez , 0,0,0 , 0,Cos(ph),0);
+      if (mode) //Perspective.
+      {
+         double Ex = -2*dim*Sin(th)*Cos(ph);
+         double Ey = +2*dim        *Sin(ph);
+         double Ez = +2*dim*Cos(th)*Cos(ph);
+         gluLookAt(Ex,Ey,Ez , 0,0,0 , 0,Cos(ph),0);
+      }
+      //  Orthogonal - set world orientation
+      else
+      {
+         glRotatef(ph,1,0,0);
+         glRotatef(th,0,1,0);
+      }
    }
-   //  Orthogonal - set world orientation
-   else
+   else 
    {
-      glRotatef(ph,1,0,0);
-      glRotatef(th,0,1,0);
+      xPoint = +2*dim*Sin(turn); //Set the camera vector based on the turn (degrees)
+      zPoint = -2*dim*Cos(turn);
+      gluLookAt(xEye,yEye,zEye, xPoint+xEye,yEye,zPoint+zEye, 0,1,0); 
    }
 
    //  Flat or smooth shading
@@ -276,7 +458,7 @@ void display()
         float Diffuse[]   = {0.01*diffuse ,0.01*diffuse ,0.01*diffuse ,1.0};
         float Specular[]  = {0.01*specular,0.01*specular,0.01*specular,1.0};
         //  Light position
-        float Position[]  = {distance*Cos(zh),ylight,distance*Sin(zh),1.0};
+        float Position[]  = {distance*Cos(zh),ylight ,distance*Sin(zh),1.0};
         //  Draw light position as ball (still no lighting here)
         glColor3f(1,1,1);
         ball(Position[0],Position[1],Position[2] , 0.1);
@@ -300,12 +482,28 @@ void display()
    else
      glDisable(GL_LIGHTING);
 
-   //  Draw scene
-   cube(+1,0,0 , 0.5,0.5,0.5 , 0);
-   ball(-1,0,0 , 0.5);
-   cyl(0,0,0 , 0.5,0.5,0.5 , 0, 1, 2);
+   glEnable(GL_TEXTURE_2D);
+   glTexEnvi(GL_TEXTURE_ENV , GL_TEXTURE_ENV_MODE , mode?GL_REPLACE:GL_MODULATE);
+   glBindTexture(GL_TEXTURE_2D,texture[ntex]);
 
-   //  Draw axes - no lighting from here on
+   cyl(0, .3, 0 ,  0.1, 0.5, 0.1 , 0, 1, 2);
+   flooring(0, -.01, 0, 10 ,0 ,10 , 0);
+   flooring(0, -.03, 0, 10, 0, 10, 0);
+   Tree(0, 2, 0, 0.35 ,0.5 ,0.35 , 0);
+   Tree(0,1.5, 0, .5, .7, .5, 45);
+   Tree(0,1, 0, .7, .9, .7, 30);
+   SuperGift(0, .27, 1, .5, .4, .7, 0, 0.545, 0.0, 0.3 ,0.294, 0.0, 0.510, 0.941, 1.0, 1.0);
+   SuperGift(1, .17, 0, .4, .3, .3, 30, 0.7, 0.5, 0.0 ,1, 0.0, 0.310, 1, .9, .9);
+   cyl(1, .3, 1 ,  0.1, 0.5, 0.1 , 0, 1, 2);
+   Tree(1, 2, 1, 0.4 ,0.6 ,0.4 , 45);
+   Tree(1,1.5, 1, .6, .8, .6, 0);
+   Tree(1,1, 1, .8, 1, .8, 60);
+   
+   cyl(0, .3, 2 ,  0.1, 0.5, 0.1 , 0, 1, 2);
+   Tree(0, 2, 2, 0.2 ,0.5 ,0.2 , 35);
+   Tree(0,1.5, 2, .4, .6, .4, 45);
+   Tree(0,1, 2, .5, .7, .5, 60);
+               
    glDisable(GL_LIGHTING);
    glColor3f(1,1,1);
    if (axes)
@@ -338,6 +536,10 @@ void display()
       glWindowPos2i(5,25);
       Print("Ambient=%d  Diffuse=%d Specular=%d Emission=%d Shininess=%.0f",ambient,diffuse,specular,emission,shiny);
    }
+   if(fps)
+   {
+      Print("FPS: On View Angle=%d",turn);
+   }
 
    //  Render the scene and make it visible
    ErrCheck("display");
@@ -362,6 +564,8 @@ void idle()
  */
 void special(int key,int x,int y)
 {
+   if (!fps)
+   {
    //  Right arrow key - increase angle by 5 degrees
    if (key == GLUT_KEY_RIGHT)
       th += 5;
@@ -397,6 +601,31 @@ void special(int key,int x,int y)
    //  Keep angles to +/-360 degrees
    th %= 360;
    ph %= 360;
+   }
+   else
+   {
+      double move = 0.05; 
+      //  Right arrow key - increase angle by 1 degrees
+      if (key == GLUT_KEY_RIGHT){
+         turn += 1;
+      }
+      //  Left arrow key - decrease angle by 1 degrees
+      else if (key == GLUT_KEY_LEFT){
+         turn -= 1;
+      }
+      //   Move in the correct vector direction
+      else if (key == GLUT_KEY_UP){
+         xEye += xPoint*move;
+         zEye += zPoint*move;
+      }
+      //  
+      else if (key == GLUT_KEY_DOWN) {
+         xEye -= xPoint*move;
+         zEye -= zPoint*move;
+      }
+      turn %=360;
+   }
+
    //  Update projection
    Project(mode?fov:0,asp,dim);
    //  Tell GLUT it is necessary to redisplay the scene
@@ -411,6 +640,8 @@ void key(unsigned char ch,int x,int y)
    //  Exit on ESC
    if (ch == 27)
       exit(0);
+   else if (ch == 'f' || ch == 'F')
+      fps = 1-fps;
    //  Reset view angle
    else if (ch == '0')
       th = ph = 0;
@@ -499,13 +730,15 @@ int main(int argc,char* argv[])
    //  Request double buffered, true color window with Z buffering at 600x600
    glutInitDisplayMode(GLUT_RGB | GLUT_DEPTH | GLUT_DOUBLE);
    glutInitWindowSize(400,400);
-   glutCreateWindow("Lighting");
+   glutCreateWindow("HW5: Sigrunn Sky");
    //  Set callbacks
    glutDisplayFunc(display);
    glutReshapeFunc(reshape);
    glutSpecialFunc(special);
    glutKeyboardFunc(key);
    glutIdleFunc(idle);
+
+   texture[0] = LoadTexBMP("snow.bmp");
    //  Pass control to GLUT so it can interact with the user
    ErrCheck("init");
    glutMainLoop();
