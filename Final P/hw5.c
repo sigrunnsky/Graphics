@@ -37,7 +37,7 @@ int ph=2;         //  Elevation of view angle
 int fov=55;       //  Field of view (for perspective)
 double asp=1;     //  Aspect ratio
 double dim=3.0;   //  Size of world
-unsigned int texture[8]; //textures
+unsigned int texture[10]; //textures
 int    box=1;    //  Draw sky
 int    sky[2];   //  Sky textures
  float tpi = 2 * 3.141592;
@@ -57,7 +57,7 @@ int specular  =  10;  // Specular intensity (%)
 int shininess =   0;  // Shininess (power of two)
 float shiny   =   1;  // Shininess (value)
 int zh        =  90;  // Light azimuth
-float ylight  =   2;  // Elevation of light
+float ylight  =   10;  // Elevation of light
 
 //fps
 // int turn = 45.0;  // turning degrees.. 300 fo you can see the trees.
@@ -69,7 +69,7 @@ float ylight  =   2;  // Elevation of light
 // double yEye = 1;
 // double zEye = 5;
 //angle of rotation
-float xpos = 0, ypos = 0, zpos = 0, xrot = 0, yrot = 0, angle=0.0;
+float xpos = 5, ypos = 1, zpos = 5, xrot = 0, yrot = 270, angle=0.0;
 
 
 /* 
@@ -127,7 +127,7 @@ static void Sky(double D)
 
 static void cyl(double x,double y,double z,
                  double dx,double dy,double dz,
-                 double th, float radius, float halfheight, int tex)
+                 double th, float radius, float halfheight, int tex, int tex2)
 {
      //  Set specular color to red
    float white[] = {1,0,0,1};
@@ -147,41 +147,8 @@ static void cyl(double x,double y,double z,
    glTexEnvi(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_MODULATE);
    glBindTexture(GL_TEXTURE_2D,texture[tex]);
    
-   // glBegin(GL_TRIANGLE_FAN);
-   //    glTexCoord2f(0.5,0.5); 
-   //    glVertex3d(0.0, 0, 0.0);
-
-   //    for(i = 0.0; i <= 360; i+=10) {
-   //      glTexCoord2f(-0.5*Cos(i)+0.5, 0.5*Sin(i)+0.5);
-   //      glVertex3d(radius * Cos(i), 0, radius * Sin(i));
-   //    }
-   //  glEnd();
-   // //Top
-
-  glNormal3d(0,1,0);
-   glBegin(GL_TRIANGLE_FAN);
-
    
-     glTexCoord2f(0.5,0.5); 
-      glVertex3d(0.0, halfheight, 0.0);
-
-      for(double j = 0.0; j < 360; j+=.125) {
-        glTexCoord2f(-0.5*Cos(j)+0.5, 0.5*Sin(j)+0.5);
-        glVertex3d(radius * cos(j), halfheight, radius * sin(j));
-      }
-   glEnd();
-
-   //Bottom
-   glBegin(GL_TRIANGLE_FAN);
-   glNormal3d(0,-1,0);
-      glVertex3d(0.0, -halfheight, 0.0);
-
-      for(double j = 0.0; j < 360; j+=.125) {
-         glVertex3d(radius * cos(j), -halfheight, radius * sin(j));
-      }
-   glEnd();
-
-   glBegin(GL_TRIANGLE_STRIP);
+  glBegin(GL_TRIANGLE_STRIP);
    for (int i = 0; i <= 360; i++) {
       const float texx = (i / (float) 360);
       double x = radius * Cos(i);
@@ -194,6 +161,39 @@ static void cyl(double x,double y,double z,
       glTexCoord2f(texx,0); glVertex3d(x, -y, z);
    }
    glEnd();
+
+   glBindTexture(GL_TEXTURE_2D,texture[tex2]);
+
+   glNormal3d(0,1,0);
+   glBegin(GL_TRIANGLE_FAN);
+
+   
+     glTexCoord2f(0.5,0.5); 
+      glVertex3d(0.0, halfheight, 0.0);
+
+      for(double j = 0.0; j < 360; j+=.125) {
+        glTexCoord2f(-0.5*Cos(j)+0.5, 0.5*Sin(j)+0.5);
+        glVertex3d(radius * cos(j), halfheight, radius * sin(j));
+      }
+   glEnd();
+
+
+   glBindTexture(GL_TEXTURE_2D,texture[tex2]);
+   //Bottom
+
+   glNormal3d(0,-1,0);
+   glBegin(GL_TRIANGLE_FAN);
+    
+    glTexCoord2f(0.5,0.5);
+      glVertex3d(0.0, -halfheight, 0.0);
+
+      for(double j = 0.0; j < 360; j+=.125) {
+         glTexCoord2f(-0.5*Cos(j)+0.5, 0.5*Sin(j)+0.5);
+         glVertex3d(radius * cos(j), -halfheight, radius * sin(j));
+      }
+   glEnd();
+
+   
 
    glPopMatrix(); 
 }
@@ -208,31 +208,110 @@ static void cabin ( double x, double y, double z, double th, double dx, double d
 
 	glColor3f(1,1,1);
     
-    //Side
-    cyl(x, y+0, z, 0.05, 5, 0.05 , 90, 10, 2, 7);
-    cyl(x, y+1, z, 0.05, 5, 0.05 , 90, 10, 2, 7);
-    cyl(x, y+2, z, 0.05, 5, 0.05 , 90, 10, 2, 7);
-    cyl(x, y+3, z, 0.05, 5, 0.05 , 90, 10, 2, 7);
-    cyl(x, y+4, z, 0.05, 5, 0.05 , 90, 10, 2, 7);
-    cyl(x, y+5, z, 0.05, 5, 0.05 , 90, 10, 2, 7);
-    cyl(x, y+6, z, 0.05, 5, 0.05 , 90, 10, 2, 7);
-    cyl(x, y+7, z, 0.05, 5, 0.05 , 90, 10, 2, 7);
-    cyl(x, y+8, z, 0.05, 5, 0.05 , 90, 10, 2, 7);
-    cyl(x, y+9, z, 0.05, 5, 0.05 , 90, 10, 2, 7);
-    cyl(x, y+10, z, 0.05, 5, 0.05 , 90, 10, 2, 7);
+    //Front
+    cyl(x, y+0, z, 0.05, 5, 0.05 , 90, 10, 2, 7,8);
+    cyl(x, y+1, z, 0.05, 5, 0.05 , 90, 10, 2, 7,8);
+    cyl(x, y+2, z, 0.05, 5, 0.05 , 90, 10, 2, 7,8);
+    cyl(x, y+3, z, 0.05, 5, 0.05 , 90, 10, 2, 7,8);
+    cyl(x, y+4, z, 0.05, 5, 0.05 , 90, 10, 2, 7,8);
+    cyl(x, y+5, z, 0.05, 5, 0.05 , 90, 10, 2, 7,8);
+    cyl(x, y+6, z, 0.05, 5, 0.05 , 90, 10, 2, 7,8);
+    cyl(x, y+7, z, 0.05, 4.5, 0.05 , 90, 10, 2, 7,8);
+    cyl(x, y+8, z, 0.05, 4, 0.05 , 90, 10, 2, 7,8);
+    cyl(x, y+9, z, 0.05, 3.5, 0.05 , 90, 10, 2, 7,8);
+    cyl(x, y+10, z, 0.05, 3, 0.05 , 90, 10, 2, 7,8);
+    cyl(x, y+11, z, 0.05, 2.5, 0.05 , 90, 10, 2, 7,8);
+    cyl(x, y+12, z, 0.05, 2, 0.05 , 90, 10, 2, 7,8);
+    cyl(x, y+13, z, 0.05, 1.5, 0.05 , 90, 10, 2, 7,8);
+    cyl(x, y+14, z, 0.05, 1, 0.05 , 90, 10, 2, 7,8);
+    cyl(x, y+15, z, 0.05, .5, 0.05 , 90, 10, 2, 7,8);
+    
 
-    //Opposite Side
-    cyl(x+16, y+0, z, 0.05, 5, 0.05 , 90, 10, 2, 7);
-    cyl(x+16, y+1, z, 0.05, 5, 0.05 , 90, 10, 2,7);
-    cyl(x+16, y+2, z, 0.05, 5, 0.05 , 90, 10, 2,7);
-    cyl(x+16, y+3, z, 0.05, 5, 0.05 , 90, 10, 2,7);
-    cyl(x+16, y+4, z, 0.05, 5, 0.05 , 90, 10, 2,7);
-    cyl(x+16, y+5, z, 0.05, 5, 0.05 , 90, 10, 2,7);
-    cyl(x+16, y+6, z, 0.05, 5, 0.05 , 90, 10, 2,7);
-    cyl(x+16, y+7, z, 0.05, 5, 0.05 , 90, 10, 2,7);
-    cyl(x+16, y+8, z, 0.05, 5, 0.05 , 90, 10, 2,7);
-    cyl(x+16, y+9, z, 0.05, 5, 0.05 , 90, 10, 2,7);
-    cyl(x+16, y+10, z, 0.05, 5, 0.05 , 90, 10, 2,7);
+    //Back
+    cyl(x+16, y+0, z, 0.05, 5, 0.05 , 90, 10, 2, 7,8);
+    cyl(x+16, y+1, z, 0.05, 5, 0.05 , 90, 10, 2,7,8);
+    cyl(x+16, y+2, z, 0.05, 5, 0.05 , 90, 10, 2,7,8);
+    cyl(x+16, y+3, z, 0.05, 5, 0.05 , 90, 10, 2,7,8);
+    cyl(x+16, y+4, z, 0.05, 5, 0.05 , 90, 10, 2,7,8);
+    cyl(x+16, y+5, z, 0.05, 5, 0.05 , 90, 10, 2,7,8);
+    cyl(x+16, y+6, z, 0.05, 5, 0.05 , 90, 10, 2,7,8);
+    cyl(x+16, y+7, z, 0.05, 4.5, 0.05 , 90, 10, 2, 7,8);
+    cyl(x+16, y+8, z, 0.05, 4, 0.05 , 90, 10, 2, 7,8);
+    cyl(x+16, y+9, z, 0.05, 3.5, 0.05 , 90, 10, 2, 7,8);
+    cyl(x+16, y+10, z, 0.05, 3, 0.05 , 90, 10, 2, 7,8);
+    cyl(x+16, y+11, z, 0.05, 2.5, 0.05 , 90, 10, 2, 7,8);
+    cyl(x+16, y+12, z, 0.05, 2, 0.05 , 90, 10, 2, 7,8);
+    cyl(x+16, y+13, z, 0.05, 1.5, 0.05 , 90, 10, 2, 7,8);
+    cyl(x+16, y+14, z, 0.05, 1, 0.05 , 90, 10, 2, 7,8);
+    cyl(x+16, y+15, z, 0.05, .5, 0.05 , 90, 10, 2, 7,8);
+    
+    //glColor3f(1,1,1);
+  
+    glEnable(GL_TEXTURE_2D);
+    glTexEnvi(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_MODULATE);
+    glBindTexture(GL_TEXTURE_2D,texture[7]);
+    glBegin(GL_QUADS);
+
+    glNormal3f(0,1,0);   
+    //bottom left wood pannel  
+    glTexCoord2f(0,0); glVertex3f(x+19,y+4,z+11);
+    glTexCoord2f(10,0); glVertex3f(x+19,y+15,z);
+    glTexCoord2f(10,10); glVertex3f(x-3,y+15,z);
+    glTexCoord2f(0,10); glVertex3f(x-3,y+4,z+11);
+    //bottom right wood panel
+    glTexCoord2f(0,0); glVertex3f(x+19,y+4,z-11);
+    glTexCoord2f(10,0); glVertex3f(x+19,y+15,z);
+    glTexCoord2f(10,10); glVertex3f(x-3,y+15,z);
+    glTexCoord2f(0,10); glVertex3f(x-3,y+4,z-11);
+    //top left wood panel
+    glTexCoord2f(0,0); glVertex3f(x+19,y+5,z+11);
+    glTexCoord2f(10,0); glVertex3f(x+19,y+16,z);
+    glTexCoord2f(10,10); glVertex3f(x-3,y+16,z);
+    glTexCoord2f(0,10); glVertex3f(x-3,y+5,z+11);
+    //top right wood panel
+    glTexCoord2f(0,0); glVertex3f(x+19,y+5,z-11);
+    glTexCoord2f(10,0); glVertex3f(x+19,y+16,z);
+    glTexCoord2f(10,10); glVertex3f(x-3,y+16,z);
+    glTexCoord2f(0,10); glVertex3f(x-3,y+5,z-11);
+    //imbetween - right 
+
+    //Imbetween areas on the triangle top
+    glTexCoord2f(0,0); glVertex3f(x-3,y+4,z+11);
+    glTexCoord2f(10,0); glVertex3f(x-3,y+5,z+11);
+    glTexCoord2f(10,1); glVertex3f(x-3,y+16,z);
+    glTexCoord2f(0,1); glVertex3f(x-3,y+15,z);
+
+    glTexCoord2f(0,0); glVertex3f(x+19,y+4,z+11);
+    glTexCoord2f(10,0); glVertex3f(x+19,y+5,z+11);
+    glTexCoord2f(10,1); glVertex3f(x+19,y+16,z);
+    glTexCoord2f(0,1); glVertex3f(x+19,y+15,z);
+
+    glTexCoord2f(0,0); glVertex3f(x-3,y+4,z-11);
+    glTexCoord2f(10,0); glVertex3f(x-3,y+5,z-11);
+    glTexCoord2f(10,1); glVertex3f(x-3,y+16,z);
+    glTexCoord2f(0,1); glVertex3f(x-3,y+15,z);
+
+    glTexCoord2f(0,0); glVertex3f(x+19,y+4,z-11);
+    glTexCoord2f(10,0); glVertex3f(x+19,y+5,z-11);
+    glTexCoord2f(10,1); glVertex3f(x+19,y+16,z);
+    glTexCoord2f(0,1); glVertex3f(x+19,y+15,z);
+
+    //
+    glTexCoord2f(0,0); glVertex3f(x-3,y+4,z+11);
+    glTexCoord2f(10,0); glVertex3f(x-3,y+5,z+11);
+    glTexCoord2f(10,1); glVertex3f(x+19,y+5,z+11);
+    glTexCoord2f(0,1); glVertex3f(x+19,y+4,z+11);
+
+    glTexCoord2f(0,0); glVertex3f(x-3,y+4,z-11);
+    glTexCoord2f(10,0); glVertex3f(x-3,y+5,z-11);
+    glTexCoord2f(10,1); glVertex3f(x+19,y+5,z-11);
+    glTexCoord2f(0,1); glVertex3f(x+19,y+4,z-11);
+    glEnd();
+
+
+    // glPopMatrix();
+    
+    
 
     glPopMatrix();
 
@@ -249,32 +328,32 @@ static void cabin2 ( double x, double y, double z, double th, double dx, double 
 	glColor3f(1,1,1);
     
     //Side
-    cyl(x-8, y+0.5, z+8, 0.05, 5, 0.05 , 90, 10, 2,7);
-    cyl(x-8, y+1.5, z+8, 0.05, 5, 0.05 , 90, 10, 2,7);
-    cyl(x-8, y+2.5, z+8, 0.05, 5, 0.05 , 90, 10, 2,7);
-    cyl(x-8, y+3.5, z+8, 0.05, 5, 0.05 , 90, 10, 2,7);
-    cyl(x-8, y+4.5, z+8, 0.05, 5, 0.05 , 90, 10, 2,7);
-    cyl(x-8, y+5.5, z+8, 0.05, 5, 0.05 , 90, 10, 2,7);
-    cyl(x-8, y+6.5, z+8, 0.05, 5, 0.05 , 90, 10, 2,7);
-    cyl(x-8, y+7.5, z+8, 0.05, 5, 0.05 , 90, 10, 2,7);
-    cyl(x-8, y+8.5, z+8, 0.05, 5, 0.05 , 90, 10, 2,7);
-    cyl(x-8, y+9.5, z+8, 0.05, 5, 0.05 , 90, 10, 2,7);
-    cyl(x-8, y+10.5, z+8, 0.05, 5, 0.05 , 90, 10, 2,7);
+    cyl(x-8, y+0.5, z+8, 0.05, 5, 0.05 , 90, 10, 2,7,8);
+    cyl(x-8, y+1.5, z+8, 0.05, 5, 0.05 , 90, 10, 2,7,8);
+    cyl(x-8, y+2.5, z+8, 0.05, 5, 0.05 , 90, 10, 2,7,8);
+    cyl(x-8, y+3.5, z+8, 0.05, 5, 0.05 , 90, 10, 2,7,8);
+    cyl(x-8, y+4.5, z+8, 0.05, 5, 0.05 , 90, 10, 2,7,8);
+    cyl(x-8, y+5.5, z+8, 0.05, 5, 0.05 , 90, 10, 2,7,8);
+    cyl(x-8, y+6.5, z+8, 0.05, 5, 0.05 , 90, 10, 2,7,8);
+    cyl(x-8, y+7.5, z+8, 0.05, 5, 0.05 , 90, 10, 2,7,8);
+    // cyl(x-8, y+8.5, z+8, 0.05, 5, 0.05 , 90, 10, 2,7,8);
+    // cyl(x-8, y+9.5, z+8, 0.05, 5, 0.05 , 90, 10, 2,7,8);
+    // cyl(x-8, y+10.5, z+8, 0.05, 5, 0.05 , 90, 10, 2,7,8);
 
     //Opposite Side
-    cyl(x+8, y+0, z+8, 0.05, 5, 0.05 , 90, 10, 2,7);
-    cyl(x+8, y+1, z+8, 0.05, 5, 0.05 , 90, 10, 2,7);
-    cyl(x+8, y+2, z+8, 0.05, 5, 0.05 , 90, 10, 2,7);
-    cyl(x+8, y+3, z+8, 0.05, 5, 0.05 , 90, 10, 2,7);
-    cyl(x+8, y+4, z+8, 0.05, 5, 0.05 , 90, 10, 2,7);
-    cyl(x+8, y+5, z+8, 0.05, 5, 0.05 , 90, 10, 2,7);
-    cyl(x+8, y+6, z+8, 0.05, 5, 0.05 , 90, 10, 2,7);
-    cyl(x+8, y+7, z+8, 0.05, 5, 0.05 , 90, 10, 2,7);
-    cyl(x+8, y+8, z+8, 0.05, 5, 0.05 , 90, 10, 2,7);
-    cyl(x+8, y+9, z+8, 0.05, 5, 0.05 , 90, 10, 2,7);
-    cyl(x+8, y+10, z+8, 0.05, 5, 0.05 , 90, 10, 2,7);
+    cyl(x+8, y+0, z+8, 0.05, 5, 0.05 , 90, 10, 2,7,8);
+    cyl(x+8, y+1, z+8, 0.05, 5, 0.05 , 90, 10, 2,7,8);
+    cyl(x+8, y+2, z+8, 0.05, 5, 0.05 , 90, 10, 2,7,8);
+    cyl(x+8, y+3, z+8, 0.05, 5, 0.05 , 90, 10, 2,7,8);
+    cyl(x+8, y+4, z+8, 0.05, 5, 0.05 , 90, 10, 2,7,8);
+    cyl(x+8, y+5, z+8, 0.05, 5, 0.05 , 90, 10, 2,7,8);
+    cyl(x+8, y+6, z+8, 0.05, 5, 0.05 , 90, 10, 2,7,8);
+    cyl(x+8, y+7, z+8, 0.05, 5, 0.05 , 90, 10, 2,7,8);
+    // cyl(x+8, y+8, z+8, 0.05, 5, 0.05 , 90, 10, 2,7,8);
+    // cyl(x+8, y+9, z+8, 0.05, 5, 0.05 , 90, 10, 2,7,8);
+    // cyl(x+8, y+10, z+8, 0.05, 5, 0.05 , 90, 10, 2,7,8);
  	
-
+    
     
     glPopMatrix();
 }
@@ -294,66 +373,90 @@ static void cabinC(double x, double y, double z, double th, double dx, double dy
 	glPopMatrix();
 
 }
-static void ground(double x,double y,double z,
-                 double dx,double dy,double dz,
-                 double th, float radius, float halfheight, int tex)
-{
-	 //double radius= 10;
-   //int tNum = 100;
+static void ground(double x, double y, double z, double th)
+ {
+
+  glPushMatrix();
+
+  glTranslated(x,y,z);
+  glRotated(th,1,0,0);
+  glScaled(50,50,50); 
+
+   glEnable(GL_TEXTURE_2D);
+   glTexEnvi(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_MODULATE);
+   glBindTexture(GL_TEXTURE_2D,texture[0]);
+
+
+  
+   glColor3f(1,1,1);
+  
+     glBegin(GL_QUADS);
+    glNormal3f(0,1,0);
+   // glTexCoord2f(25,25);
+  
+  
+   glTexCoord2f(0,0); glVertex3f(-1,+1,+1);
+   glTexCoord2f(1,0); glVertex3f(+1,+1,+1);
+   glTexCoord2f(1,1); glVertex3f(+1,+1,-1);
+   glTexCoord2f(0,1); glVertex3f(-1,+1,-1);
+   glEnd();
+   glPopMatrix();
+// 	 //double radius= 10;
+//    //int tNum = 100;
   
 
-    glPushMatrix();
+//     glPushMatrix();
 
-    glTranslated(x,y,z);
-    glRotated(th,0,1,0);
-    glScaled(radius,radius,radius);
+//     glTranslated(x,y,z);
+//     glRotated(th,0,1,0);
+//     glScaled(radius,radius,radius);
 
-    glEnable(GL_TEXTURE_2D);
-    glTexEnvi(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_MODULATE);
-    glColor3f(1, 1, 1); //dim grey slate
-    glBindTexture(GL_TEXTURE_2D, texture[0]);
+//     glEnable(GL_TEXTURE_2D);
+//     glTexEnvi(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_MODULATE);
+//     glColor3f(1, 1, 1); //dim grey slate
+//     glBindTexture(GL_TEXTURE_2D, texture[0]);
    
-    double i; 
+//     double i; 
 
-    glNormal3d(0,1,0);
-    glBegin(GL_TRIANGLE_FAN);
+//     glNormal3d(0,1,0);
+//     glBegin(GL_TRIANGLE_FAN);
 
    
-     glTexCoord2f(0.5,0.5); 
-      glVertex3d(0.0, halfheight, 0.0);
+//      glTexCoord2f(0.5,0.5); 
+//       glVertex3d(0.0, halfheight, 0.0);
 
-      for(double j = 0.0; j < 360; j+=.125) {
-        glTexCoord2f(-0.5*Cos(j)+0.5, 0.5*Sin(j)+0.5);
-        glVertex3d(radius * cos(j), halfheight, radius * sin(j));
-      }
-   glEnd();
+//       for(double j = 0.0; j < 360; j+=.125) {
+//         glTexCoord2f(-0.5*Cos(j)+0.5, 0.5*Sin(j)+0.5);
+//         glVertex3d(radius * cos(j), halfheight, radius * sin(j));
+//       }
+//    glEnd();
 
-   glBindTexture(GL_TEXTURE_2D, texture[5]);
-   //Bottom
-   glBegin(GL_TRIANGLE_FAN);
-   glNormal3d(0,-1,0);
-      glVertex3d(0.0, -halfheight, 0.0);
+//    glBindTexture(GL_TEXTURE_2D, texture[5]);
+//    //Bottom
+//    glBegin(GL_TRIANGLE_FAN);
+//    glNormal3d(0,-1,0);
+//       glVertex3d(0.0, -halfheight, 0.0);
 
-      for(double j = 0.0; j < 360; j+=.125) {
-         glVertex3d(radius * cos(j), -halfheight, radius * sin(j));
-      }
-   glEnd();
+//       for(double j = 0.0; j < 360; j+=.125) {
+//          glVertex3d(radius * cos(j), -halfheight, radius * sin(j));
+//       }
+//    glEnd();
 
-   glBegin(GL_TRIANGLE_STRIP);
-   for (int i = 0; i <= 360; i++) {
-      const float texx = (i / (float) 360);
-      double x = radius * Cos(i);
-      double y = halfheight;
-      double z = radius * Sin(i);
+//    glBegin(GL_TRIANGLE_STRIP);
+//    for (int i = 0; i <= 360; i++) {
+//       const float texx = (i / (float) 360);
+//       double x = radius * Cos(i);
+//       double y = halfheight;
+//       double z = radius * Sin(i);
 
-      glNormal3d(x, y, z);
+//       glNormal3d(x, y, z);
 
-      glTexCoord2f(texx,20); glVertex3d(x, y, z);
-      glTexCoord2f(texx,0); glVertex3d(x, -y, z);
-   }
-   glEnd();
+//       glTexCoord2f(texx,20); glVertex3d(x, y, z);
+//       glTexCoord2f(texx,0); glVertex3d(x, -y, z);
+//    }
+//    glEnd();
 
-   glPopMatrix(); 
+//    glPopMatrix(); 
 
     //  /* Top of Cylinder */
     // glBegin(GL_TRIANGLE_FAN);
@@ -570,25 +673,25 @@ static void Vertex(double th, double ph)
 //    glVertex3d(Sin(th)*Cos(ph) , Sin(ph) , Cos(th)*Cos(ph));
 // }
 
-   static void snowglobe(double r)
-   {
+ //   static void snowglobe(double r)
+ //   {
    	
- 	float Emission[]  = {0.0,0.0,0.01*emission,1.0};
-   	glTranslated(0,5,0);
-    glRotated(0,0,0,0);
+ // 	float Emission[]  = {0.0,0.0,0.01*emission,1.0};
+ //   	glTranslated(0,5,0);
+ //    glRotated(0,0,0,0);
 
    
-    glColor4f(1,1,1,0.23);
-    glMaterialfv(GL_FRONT,GL_EMISSION,Emission);
-	 glEnable(GL_BLEND); 
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-   // glColor4ub(1,1,1,.33);
+ //    glColor4f(1,1,1,0.23);
+ //    glMaterialfv(GL_FRONT,GL_EMISSION,Emission);
+	//  glEnable(GL_BLEND); 
+ //    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+ //   // glColor4ub(1,1,1,.33);
 
-    glutSolidSphere(r, 100, 100);
+ //    glutSolidSphere(r, 100, 100);
 
-   	glDisable(GL_BLEND);
+ //   	glDisable(GL_BLEND);
       
- }
+ // }
 
 static void ball(double x,double y,double z,double r)
 {
@@ -601,7 +704,7 @@ static void ball(double x,double y,double z,double r)
    glTranslated(x,y,z);
    glScaled(r,r,r);
    //  White ball
-  
+
    glMaterialf(GL_FRONT,GL_SHININESS,shiny);
    glMaterialfv(GL_FRONT,GL_SPECULAR,yellow);
    glMaterialfv(GL_FRONT,GL_EMISSION,Emission);
@@ -682,37 +785,45 @@ void display()
    
  
 
-   cyl(0, .3, 0 ,  0.1, 0.5, 0.1 , 0, 1, 2,2);
+   cyl(0, .3, 0 ,  0.1, 0.5, 0.1 , 0, 1, 2,2,2);
    Tree(0, 2, 0, 0.35 ,0.5 ,0.35 , 0);
    Tree(0,1.5, 0, .5, .7, .5, 45);
    Tree(0,1, 0, .7, .9, .7, 30);
    SuperGift(0, .27, 1, .5, .4, .5, 0, 3, 4);
    SuperGift(-1, .17, 0, .3, .3, .3, 30, 6, 3);
-   cyl(1, .3, 1 ,  0.1, 0.5, 0.1 , 0, 1, 2,2);
+   cyl(1, .3, 1 ,  0.1, 0.5, 0.1 , 0, 1, 2,2,2);
    Tree(1, 2, 1, 0.4 ,0.6 ,0.4 , 45);
    Tree(1,1.5, 1, .6, .8, .6, 0);
    Tree(1,1, 1, .8, 1, .8, 60);
    
-   cyl(-1.5, .3, 2 ,  0.1, 0.5, 0.1 , 0, 1, 2,2);
+   cyl(-1.5, .3, 2 ,  0.1, 0.5, 0.1 , 0, 1, 2,2,2);
    Tree(-1.5, 2, 2, 0.2 ,0.5 ,0.2 , 60);
    Tree(-1.5,1.5, 2, .4, .6, .4, 80);
    Tree(-1.5,1, 2, .5, .7, .5, 10);
    
-   cyl(-3, .3, -1 ,  0.1, 0.5, 0.1 , 0, 1, 2,2);
+   cyl(-3, .3, -1 ,  0.1, 0.5, 0.1 , 0, 1, 2,2,2);
    Tree(-3, 2, -1, 0.2 ,0.5 ,0.2 ,30);
    Tree(-3,1.5, -1, .4, .6, .4, 40);
    Tree(-3,1, -1, .5, .7, .5, 50);
 
-   cyl(2, .3, 3 ,  0.1, 0.5, 0.1 , 0, 1, 2,2);
+   cyl(2, .3, 3 ,  0.1, 0.5, 0.1 , 0, 1, 2,2,2);
    Tree(2, 2, 3, 0.2 ,0.5 ,0.2 , 0);
    Tree(2,1.5, 3, .4, .6, .4, 65);
    Tree(2,1, 3, .5, .7, .5, 40);
 
    cabinC(0, -2.5, 10 , 0, 1, 1, 1);
-  
-   snowglobe(25);
+    
+    
    
-   ground(0, -12, 0 ,  1, 1, 1 , 0, 5, 1.2,2);
+  //  gluQuadricTexture(quadric, true);
+// glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+// glEnable(GL_TEXTURE_GEN_S);
+// glEnable(GL_TEXTURE_GEN_T);
+// glBindTexture(GL_TEXTURE_2D, texture[9]);
+// glutSolidTorus(1, 2, 10, 10);
+//   snowglobe(25);
+   
+  // ground(0,-20,0,0);
 
    glDisable(GL_LIGHTING);
    glColor3f(1,1,1);
@@ -799,23 +910,24 @@ void idle()
  */
 void special (int key, int x, int y) {
 
+
     if (key==GLUT_KEY_PAGE_UP)
     {
-    xrot += 5;
+    xrot -= 5;
     if (xrot >360) xrot -= 360;
     }
 
     if (key==GLUT_KEY_PAGE_DOWN)
     {
-    xrot -= 5;
+    xrot += 5;
     if (xrot < -360) xrot += 360;
     }
 
     if (key==GLUT_KEY_UP)
     {
-    float xrotrad;
-    float yrotrad;
-    yrotrad = (yrot / 180 * 3.141592654f);
+    // float xrotrad;
+    // float yrotrad;
+    float yrotrad = (yrot / 180 * 3.141592654f);
    // xrotrad = (xrot / 180 * 3.141592654f); 
     xpos += (sin(yrotrad));
     zpos -= (cos(yrotrad));
@@ -824,8 +936,8 @@ void special (int key, int x, int y) {
 
     if (key==GLUT_KEY_DOWN)
     {
-    float xrotrad, yrotrad;
-    yrotrad = (yrot / 180 * 3.141592654f);
+    // float xrotrad, yrotrad;
+    float yrotrad = (yrot / 180 * 3.141592654f);
    // xrotrad = (xrot / 180 * 3.141592654f); 
     xpos -= (sin(yrotrad));
     zpos += (cos(yrotrad)) ;
@@ -885,17 +997,19 @@ int main(int argc,char* argv[])
    //glutKeyboardFunc(key);
    glutIdleFunc(display);
 
-   texture[0] = LoadTexBMP("snow.bmp");
-   texture[1] = LoadTexBMP("pine2.bmp");
-   texture[2] = LoadTexBMP("bark.bmp");
-   texture[3] = LoadTexBMP("wrap1.bmp");
-   texture[4] = LoadTexBMP("wrap2.bmp");
-   texture[5] = LoadTexBMP("sky.bmp");
-   texture[6] = LoadTexBMP("wrap3.bmp");
-   texture[7] = LoadTexBMP("cabinwood.bmp");
-
-   sky[0] = LoadTexBMP("sky0.bmp");
-   sky[1] = LoadTexBMP("sky1.bmp");
+   texture[0] = LoadTexBMP("tex/snow.bmp");
+   texture[1] = LoadTexBMP("tex/pine2.bmp");
+   texture[2] = LoadTexBMP("tex/bark.bmp");
+   texture[3] = LoadTexBMP("tex/wrap1.bmp");
+   texture[4] = LoadTexBMP("tex/wrap2.bmp");
+   texture[5] = LoadTexBMP("tex/sky.bmp");
+   texture[6] = LoadTexBMP("tex/wrap3.bmp");
+   texture[7] = LoadTexBMP("tex/cabinwood.bmp");
+   texture[8] = LoadTexBMP("tex/cabintrunk.bmp");
+//   texture[9] = LoadTexBMP("tex/reef.bmp");
+ 
+   sky[0] = LoadTexBMP("tex/sky0.bmp");
+   sky[1] = LoadTexBMP("tex/sky1.bmp");
 
    
 
