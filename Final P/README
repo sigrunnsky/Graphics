@@ -1,15 +1,35 @@
-HW5: Sigrunn Sky
+Final Project Checkpoint: Sigrunn Sky
 
-Time Spent: 5 Hours
+Time Spent: Alot of Hours
 
-*Used EX13.c as a template/starting point
-*Used https://www.opengl.org/discussion_boards/showthread.php/167115-Creating-cylinder for help on math for cylinders. 
-
+* Used my HW 5 as a starting point
+* referenced Exammple 15 from class on how to apply textures. 
+* http://www.swiftless.com/opengltuts.html for help with fps and fog 
+* Used https://www.opengl.org/discussion_boards/showthread.php/167115-Creating-cylinder for help on math for cylinders. 
+* Help from various in-class examples, such as Ex. 25 with the SkyCube
 
 Willem A. (Vlakkies) Schreuder
 CSCI4229/5229 Fall 2016
 
 
 Key bindings
-  arrows     Move around the scene
-  ESC        Exit
+  q/z       Rotate veiw up/down
+  w/a/s/d   Move about the scene
+  Mouse 	Change vieiw
+  ESC       Exit
+
+
+
+Yet to be done:
+
+* Christmas lights on the cabin (shining)
+* Light shining out of the windows
+* Double Check surface Normals (There are very many surfaces!!!)
+* The ground texture needs work. I am not sure why, but it does not look nice.
+
+Stretch Goals:
+
+* Better Trees and more objects. Maybe a fence around the cabin.
+* Snow Falling from the Sky. (much harder than I thought it would be.)
+* Draw a skycube with Mountains. I have not been able to find a nice one online that is in the right format.
+* Chimney.. with smoke!
